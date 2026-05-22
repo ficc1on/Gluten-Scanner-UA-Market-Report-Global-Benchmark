@@ -120,7 +120,35 @@
         font-weight: 600;
       }
 
-      nav a:hover { color: var(--text); }
+      nav a {
+        position: relative;
+        padding: 8px 0;
+      }
+
+      nav a:hover,
+      nav a.active {
+        color: var(--text);
+      }
+
+      nav a::after {
+        content: "";
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: -4px;
+        height: 2px;
+        border-radius: 999px;
+        background: var(--green-2);
+        opacity: 0;
+        transform: scaleX(.2);
+        transform-origin: left;
+        transition: opacity .2s ease, transform .2s ease;
+      }
+
+      nav a.active::after {
+        opacity: 1;
+        transform: scaleX(1);
+      }
 
       .nav-actions { display: flex; align-items: center; gap: 16px; }
 
@@ -987,10 +1015,11 @@
           <a href="#gtm">GTM</a>
           <a href="#finance">Фінанси</a>
           <a href="#risks">Ризики</a>
+          <a href="#sources">Джерела</a>
         </nav>
         <div class="nav-actions">
           <a class="portal" href="./report.md">Markdown</a>
-          <a class="cta" href="#sources">Джерела</a>
+          <a class="cta" href="#finance">Фінмодель</a>
         </div>
       </div>
     </header>
@@ -1003,7 +1032,7 @@
           <p class="lead">Продукт перевіряє харчовий товар за штрихкодом, OCR складу або пошуком за 3-5 секунд. Не фізичний тест на глютен — цифрова оцінка ризику на основі бази SKU і rule engine. Точність прямо залежить від покриття локальних українських товарів і якості verified layer.</p>
           <div class="hero-actions">
             <a class="cta" href="#finance">Дивитись фінмодель</a>
-            <a class="portal" href="./hosting.md">Хостинг</a>
+            <a class="portal" href="./report.md">Markdown</a>
           </div>
         </div>
         <aside class="hero-card">
@@ -1326,6 +1355,39 @@
       </section>
     </main>
 
+    <script>
+      const navLinks = [...document.querySelectorAll("nav a[href^='#']")];
+      const observedSections = navLinks
+        .map((link) => ({
+          link,
+          section: document.querySelector(link.getAttribute("href"))
+        }))
+        .filter((item) => item.section);
+
+      const setActiveNav = (id) => {
+        navLinks.forEach((link) => {
+          link.classList.toggle("active", link.getAttribute("href") === `#${id}`);
+        });
+      };
+
+      const updateActiveNav = () => {
+        const offset = window.innerHeight * 0.28;
+        const current = observedSections
+          .map(({ section }) => ({
+            id: section.id,
+            top: section.getBoundingClientRect().top - offset
+          }))
+          .filter(({ top }) => top <= 0)
+          .sort((a, b) => b.top - a.top)[0] || observedSections[0]?.section;
+
+        if (current?.id) setActiveNav(current.id);
+      };
+
+      window.addEventListener("scroll", updateActiveNav, { passive: true });
+      window.addEventListener("hashchange", updateActiveNav);
+      window.addEventListener("load", updateActiveNav);
+      updateActiveNav();
+    </script>
     <script src="./app.js?v=11"></script>
   </body>
 </html>
