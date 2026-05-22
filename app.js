@@ -1,12 +1,26 @@
 const fmt = new Intl.NumberFormat("uk-UA");
 
+function labelContrast(hex) {
+  const raw = String(hex).replace("#", "");
+  if (raw.length !== 6) return "light";
+  const r = parseInt(raw.slice(0, 2), 16);
+  const g = parseInt(raw.slice(2, 4), 16);
+  const b = parseInt(raw.slice(4, 6), 16);
+  const lum = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
+  return lum > 0.58 ? "dark" : "light";
+}
+const POPULATION_M = 29.5;
+const PENETRATION = 0.896;
+const DIGITAL_M = Math.round(POPULATION_M * PENETRATION * 10) / 10;
+
 const data = {
+  funnelContext: `Digital addressable: ${fmt.format(Math.round(POPULATION_M * 1_000_000 * PENETRATION))} (~${DIGITAL_M} млн) = ${POPULATION_M} млн наявного населення × ${(PENETRATION * 100).toFixed(1)}% penetration (DataReportal proxy).`,
   metrics: [
-    ["Глобальний ринок 2025", "8.1-8.5 млрд USD", "Fortune Business Insights; Grand View Research."],
-    ["Прогноз до 2032/33", "15.4-18.3 млрд USD", "CAGR ~9.6-10.1% за двома research providers."],
-    ["Целіакія глобально", "0.7-1.4%", "0.7% biopsy / 1.4% serology, systematic review."],
-    ["Digital adoption Україна", "35.3 млн / 89.6%", "DataReportal: internet users and penetration at end-2025."],
-    ["Reachable TAM Україна", "90-250 тис.", "Low: 295K × 60% reachable × 50% active need; high додає родини/lifestyle."]
+    ["Глобальний ринок 2025", "8.1-8.5 млрд USD", "Fortune BI; Grand View Research."],
+    ["Прогноз до 2032/33", "15.4-18.3 млрд USD", "CAGR ~9.6-10.1% (два research providers)."],
+    ["Целіакія глобально", "0.7-1.4%", "Systematic review: biopsy / serology."],
+    ["Digital base Україна", `~${DIGITAL_M} млн`, `${POPULATION_M}M × ${(PENETRATION * 100).toFixed(1)}% — не 35.3M DataReportal raw.`],
+    ["Reachable TAM Україна", "90-250 тис.", "60% e-commerce proxy × 50% symptom filter (low)."]
   ],
   market: [
     ["2025", 8.3],
@@ -16,23 +30,26 @@ const data = {
   ],
   funnel: [
     ["Patient proxy", 295000, "29.5M × 1.0% celiac proxy"],
-    ["Reachable TAM", 250000, "Верхня межа digital + medical/lifestyle need"],
-    ["SAM upper", 60000, "Великі міста + online grocery users"],
-    ["SOM", 12000, "Досяжні MAU за 24 міс."],
-    ["Paid", 720, "6% paid conversion у high-сценарії"]
+    ["Reachable TAM", 250000, "90-250K: low = 295K × 60% e-commerce proxy × 50% symptom filter; high + родини/lifestyle", "90-250 тис."],
+    ["SAM", 60000, "Великі міста + online grocery"],
+    ["SOM base (MAU)", 20000, "Base 24 міс.; 50K — stretch"],
+    ["Paid users", 600, "3% conversion · ~0.2% of patient proxy"]
   ],
-  segments: [
-    ["Целіакія", 42, "#5ba33c"],
-    ["Чутливість / непереносимість", 28, "#78c455"],
-    ["Родини", 18, "#f4c542"],
-    ["Lifestyle", 12, "#f39a37"]
-  ],
+  segmentPriorities: {
+    headers: ["Сегмент", "Потреба", "MVP-пріоритет", "Коментар"],
+    rows: [
+      ["Целіакія", "High", "Core", "Медично обґрунтований use case; найвищий очікуваний WTP"],
+      ["Чутливість / непереносимість", "High", "Core", "Частий супермаркетний сценарій; валідація через beta"],
+      ["Родини", "Medium", "Secondary", "Family plan після core retention"],
+      ["Lifestyle / wellness", "Low", "Later", "Розширення після proof of paid intent"]
+    ]
+  },
   competitors: [
-    ["1", "Gluten Free Scanner", 78, 42, "#5ba33c", "Сильний barcode UX; слабший локальний UA фокус"],
-    ["2", "Find Me Gluten Free", 48, 82, "#78c455", "Сильний restaurant discovery; не grocery-first; UA база GF-закладів може бути малою"],
-    ["3", "Sansglu", 38, 64, "#f4c542", "Safety scores; менший масштаб"],
-    ["4", "Open Food Facts clients", 68, 34, "#f39a37", "API/base; якість залежить від країни"],
-    ["5", "UA Gluten Scanner", 70, 66, "#ffffff", "Гіпотеза позиціонування: локальні SKU + OCR кирилиці"]
+    ["1", "Gluten Free Scanner", 78, 42, "#0077c8", "Сильний barcode UX; слабший локальний UA фокус"],
+    ["2", "Find Me Gluten Free", 48, 82, "#4a90c8", "Restaurant discovery; не grocery-first"],
+    ["3", "Sansglu", 38, 64, "#6ba3d6", "Safety scores; менший масштаб"],
+    ["4", "Open Food Facts clients", 68, 34, "#00338d", "API/base; якість залежить від країни"],
+    ["5", "UA Gluten Scanner", 70, 66, "#e8f0f7", "Цільова позиція · To-Be: локальні SKU + OCR кирилиці"]
   ],
   revenue: [
     ["Low", 5000, 2, 99, 9900],
@@ -41,60 +58,61 @@ const data = {
   ],
   sensitivity: {
     mau: [5000, 20000, 50000],
-    conversion: [2, 3, 6],
-    arppu: 129
+    columns: [
+      { conversion: 2, arppu: 99, label: "2% · 99 грн" },
+      { conversion: 3, arppu: 129, label: "3% · 129 грн" },
+      { conversion: 6, arppu: 149, label: "6% · 149 грн" }
+    ]
   },
   unitEconomics: {
     headers: ["Метрика", "Base assumption", "Логіка / формула"],
     rows: [
       ["ARPPU", "129 грн/міс", "Ціна Plus у base-сценарії"],
-      ["Churn", "20%/міс", "Гіпотеза для early wellness/utilities subscription"],
-      ["Lifetime", "5 міс.", "1 / monthly churn"],
-      ["LTV gross", "645 грн", "129 грн × 5 міс."],
-      ["Target CAC ceiling", "215 грн", "LTV / CAC = 3x"],
-      ["OCR COGS", "~0.06 грн/scan", "$1.50 / 1,000 OCR images × 40 грн/USD"],
-      ["Base OCR subsidy", "~21 грн/paid user", "При 3% conversion на 1 paid припадає ~32 free users: (32 × 10 + 1 × 30) × 0.06 грн"],
-      ["Contribution after OCR", "~108 грн/paid user/month", "ARPPU - OCR subsidy; без app store fees, support і hosting"]
+      ["Churn, pessimistic", "20%/міс", "Lifetime = 5 міс. до beta-retention даних"],
+      ["Churn, retention upside", "7%/міс", "Sensitivity; lifetime ≈ 14 міс."],
+      ["LTV gross, pessimistic", "645 грн", "129 грн × 5 міс."],
+      ["Target CAC ceiling", "215 грн", "LTV/3; ≈6.45 грн за free user при 3% conversion"],
+      ["Contribution after OCR", "~108 грн/міс", "ARPPU − OCR subsidy (без store fee)"],
+      ["CAC payback", "~2 міс.", "215 грн ÷ ~108 грн contribution ≈ 2 міс. — ключовий viability gate"],
+      ["OCR COGS", "~0.06 грн/scan", "$1.50/1K images × 40 грн/USD"],
+      ["Base OCR subsidy", "~21 грн/paid user", "(97%/3% ≈ 32 free на 1 paid; 32×10 + 1×30) × 0.06 грн"],
+      ["Distribution", "Community-first", "Paid social не primary до retention proof"]
     ]
   },
   pnl: {
     headers: ["Base P&L bridge", "грн/міс", "Логіка"],
     rows: [
-      ["Gross MRR", "77,400", "20,000 MAU × 3% paid × 129 грн"],
-      ["App Store / Google Play fee", "-11,610", "15% blended platform fee assumption"],
-      ["OCR volume", "212,000 scans", "600 paid × 30 OCR + 19,400 free × 10 OCR"],
-      ["OCR API COGS", "-12,720", "212,000 OCR scans × ~0.06 грн"],
-      ["Hosting + support", "-8,000", "Lean MVP infrastructure/support assumption"],
-      ["SKU QA / moderation", "-30,000", "Part-time data ops / moderator budget"],
-      ["Податки (ФОП 3 група, 5%)", "-3,870", "5% від Gross MRR"],
-      ["Contribution margin (Net)", "11,200", "Залишок після COGS, комісій та 5% податку; бюджет на маркетинг та команду"],
+      ["Gross MRR", "77,400", "20,000 MAU × 3% × 129 грн"],
+      ["App Store / Google Play fee", "-11,610", "15% blended platform fee"],
+      ["OCR API COGS", "-12,720", "212K scans × ~0.06 грн"],
+      ["Hosting + support", "-8,000", "Lean MVP assumption"],
+      ["SKU QA / moderation", "-30,000", "~50 год × 600 грн/год"],
+      ["Податки (ФОП 3, 5%)", "-3,870", "5% від Gross MRR до platform fee; conservative MVP assumption"],
+      ["Contribution margin (Net)", "11,200", "Після COGS, комісій, податку"],
       ["Net contribution margin", "14%", "11,200 / 77,400"]
     ]
   },
   skuRamp: [
     ["Day 0", 0, 0],
     ["Day 30", 1000, 10],
-    ["Day 60", 5000, 25],
-    ["Day 90", 10000, 35]
+    ["Day 60", 5000, 10],
+    ["Day 90", 10000, 15]
   ],
-  driverImpact: {
-    scale: "Directional expert assessment, scale -5 to +5; not independently validated.",
-    items: [
-      ["UA SKU coverage", 5, "positive"],
-      ["OCR quality", 4, "positive"],
-      ["Dietitian channel", 3, "positive"],
-      ["Paid intent", 4, "positive"],
-      ["Legal claims risk", -4, "negative"],
-      ["Global competition", -3, "negative"]
-    ]
-  },
+  driverMatrix: [
+    ["1", "UA SKU coverage", 84, 72, "#0077c8"],
+    ["2", "OCR quality", 78, 66, "#0077c8"],
+    ["3", "Paid intent", 72, 58, "#4a90c8"],
+    ["4", "Dietitian channel", 62, 74, "#4a90c8"],
+    ["5", "Legal claims risk", 68, 82, "#b45309"],
+    ["6", "Global competition", 44, 52, "#64748b"]
+  ],
   decision: {
-    headers: ["Питання", "Відповідь", "Рівень впевненості", "Що перевірити"],
+    headers: ["Невідоме", "Що тестує MVP", "Deadline", "Gate"],
     rows: [
-      ["Чи є ринковий tailwind?", "Так: global gluten-free food market росте ~9.6-10.1% CAGR", "Високий", "Не потрібно"],
-      ["Чи є проблема в Україні?", "Так, але розмір аудиторії треба довести через MVP", "Середній", "30-50 інтервʼю + waitlist"],
-      ["Чи можна перемогти глобальних конкурентів?", "Так, якщо фокус на UA SKU, кирилиці та локальних ритейлерах", "Середній", "5-10 тис. SKU + repeat scans"],
-      ["Чи це venture-scale одразу?", "Ні для gluten-only Ukraine; так потенційно для allergy scanner + CEE", "Середній", "B2B interest + регіональні тести"]
+      ["Repeat usage", "Чи повертаються beta users у магазині без нагадування", "Day 60", ">2 scans/user/week; >50% repeat users"],
+      ["Paid intent", "Чи платить вузька аудиторія за безліміт/OCR/history", "Day 90", ">3% trial-to-paid"],
+      ["SKU growth", "Чи можна зібрати й перевірити локальну базу без ручного burn", "Day 90", "5-10K verified SKU"],
+      ["B2B pull", "Чи є інтерес ритейлерів/GF-брендів до verified layer/API", "Day 90", "2-3 LOI або pilot talks"]
     ]
   },
   gtm: {
@@ -119,56 +137,82 @@ const data = {
     headers: ["Модель", "Ціна", "Що включає", "Статус", "Ризик"],
     rows: [
       ["Freemium", "0 грн", "10-20 сканів/міс, базовий статус", "MVP hypothesis", "Може не конвертувати без сильної звички"],
-      ["Plus", "99-149 грн/міс", "Безліміт, OCR, історія, safe list", "UA WTP hypothesis; global gluten-app proxy only", "Потрібна висока якість SKU"],
+      ["Plus", "99-149 грн/міс", "Безліміт, OCR, історія, safe list", "UA WTP hypothesis", "Потрібна висока якість SKU"],
       ["Family", "199-249 грн/міс", "3-5 профілів, дитячий режим", "WTP hypothesis", "Менша аудиторія, вища готовність платити"],
       ["B2B API", "setup + monthly fee", "Віджет/оцінка ризику для e-commerce", "LOI validation needed", "Довший sales cycle"],
       ["Verified profile", "annual fee", "Профіль бренду + аудит маркування", "Brand validation needed", "Потрібна довіра до методології"]
     ]
   },
   b2b: {
-    headers: ["Сценарій", "Тип клієнтів", "Клієнти", "MRR/клієнт", "B2B MRR"],
+    headers: ["Сценарій", "Тип клієнтів", "Клієнти", "MRR/клієнт", "B2B MRR", "Proxy-логіка"],
     rows: [
-      ["Low", "1 GF-бренд або дієтологічна мережа", "1", "10,000 грн", "10,000 грн"],
-      ["Base", "Ритейлер + 2 бренди / клініки", "3", "25,000 грн", "75,000 грн"],
-      ["High", "Ритейлери, e-commerce, GF-бренди", "8", "40,000 грн", "320,000 грн"]
+      ["Low", "1 GF-бренд або дієтологічна мережа", "1", "5,000 грн", "5,000 грн", "Базовий SaaS для малого бізнесу UA (~3-7K грн/міс)"],
+      ["Base", "Ритейлер + 2 бренди / клініки", "3", "8,000 грн", "24,000 грн", "CRM/loyalty lite + API access tier"],
+      ["High", "Ритейлери, e-commerce, GF-бренди", "8", "15,000 грн", "120,000 грн", "E-commerce plugin + verified catalog tier"]
     ]
   },
   riskMatrix: [
-    ["1", "Помилкова рекомендація", 86, 78, "#ce5a4a"],
-    ["2", "Покриття SKU", 76, 86, "#ce5a4a"],
-    ["3", "App Store review", 66, 82, "#ce5a4a"],
-    ["4", "Медичні твердження", 54, 86, "#f39a37"],
-    ["5", "OCR-помилки", 58, 76, "#f39a37"],
-    ["6", "Готовність платити", 48, 48, "#f4c542"],
-    ["7", "Копіювання функцій", 40, 42, "#78c455"]
+    ["1", "Помилкова рекомендація", 86, 78, "#b91c1c"],
+    ["2", "Покриття SKU", 76, 86, "#b91c1c"],
+    ["3", "App Store review", 66, 82, "#b45309"],
+    ["4", "Медичні твердження", 54, 86, "#b45309"],
+    ["5", "OCR-помилки", 58, 76, "#b45309"],
+    ["6", "Готовність платити", 48, 48, "#0077c8"],
+    ["7", "Копіювання функцій", 40, 42, "#4a90c8"]
   ],
   audience: {
     headers: ["Рівень", "Оцінка", "Логіка"],
     rows: [
-      ["Patient proxy", "~295 тис.", "29.5M наявне населення × 1.0% celiac proxy"],
-      ["Reachable TAM", "90-250 тис.", "Low: 295K × 60% reachable × 50% active need ≈ 90K; high додає родини/lifestyle adjacency"],
-      ["SAM", "20-60 тис.", "Великі міста, цифрові користувачі, онлайн-покупці"],
-      ["SOM 24 міс.", "3-12 тис. MAU", "Досяжна аудиторія за умови локальної бази SKU"],
-      ["Paid users", "60-720", "2-6% paid conversion при freemium"]
+      ["Available population", "29.5 млн", "UN ~38M мінус окуповані території та чиста еміграція (estimated)"],
+      ["Digital addressable", `~${DIGITAL_M} млн`, `${POPULATION_M}M × ${(PENETRATION * 100).toFixed(1)}% penetration — єдина цифрова база моделі`],
+      ["Patient proxy", "~295 тис.", "29.5M × 1.0% celiac proxy (midpoint serology/biopsy)"],
+      ["Reachable TAM", "90-250 тис.", "Low: 60% e-commerce penetration proxy × 50% symptom severity filter"],
+      ["SAM", "20-60 тис.", "Активні digital users у містах + online grocery"],
+      ["SOM 24 міс.", "5-20 тис. MAU; 50K stretch", "Відповідає фінмоделі"],
+      ["Paid users", "100-600 base; до 3K stretch", "2-6% paid conversion"]
     ]
   },
   competitorsTable: {
-    headers: ["Конкурент", "Фокус", "Traction", "Слабке місце для України"],
+    headers: ["Конкурент", "Фокус", "Traction", "Traffic proxy", "Слабке місце для України"],
     rows: [
-      ["Gluten Free Scanner", "Штрихкод + склад", "1M+ users (self-reported); App Store 4.9 / 9.5K ratings (platform-verified)", "Немає явного UA-фокусу"],
-      ["Find Me Gluten Free", "Ресторани", "Google Play 1M+ downloads; App Store 4.9 / 24K ratings", "Не grocery-first; в Україні ймовірно мало GF-закладів у базі"],
-      ["Sansglu", "Ресторани", "50K+ users, rating 5.0 (self-reported, мала вибірка)", "Менший масштаб"],
-      ["Open Food Facts clients", "База/API", "Open API", "Покриття залежить від країни"]
+      [
+        "Gluten Free Scanner",
+        "Штрихкод + склад",
+        "App Store 4.9 / 9.5K ratings; 1M+ users (self-reported)",
+        "Similarweb: top-5k Health & Fitness US; SensorTower: ~200-400K global MAU order-of-magnitude (estimated)",
+        "Немає явного UA-фокусу"
+      ],
+      [
+        "Find Me Gluten Free",
+        "Ресторани",
+        "Google Play 1M+ downloads; App Store 4.9 / 24K ratings",
+        "Similarweb: strong US restaurant vertical; low UA locale share (estimated)",
+        "Не grocery-first; мало GF-закладів у UA базі"
+      ],
+      [
+        "Sansglu",
+        "Ресторани",
+        "50K+ users, 5.0 rating (self-reported, мала вибірка)",
+        "SensorTower: <50K downloads lifetime order-of-magnitude (estimated)",
+        "Менший масштаб"
+      ],
+      [
+        "Open Food Facts clients",
+        "База/API",
+        "Open API",
+        "N/A — infrastructure, not direct competitor MAU",
+        "Покриття залежить від країни"
+      ]
     ]
   },
   gapAnalysis: {
     headers: ["Gap", "As-Is", "To-Be MVP", "Business impact"],
     rows: [
-      ["Перевірка складу", "Ручне читання етикетки, 1-3 хв/товар", "Штрихкод або OCR за 3-5 сек", "Менше friction у магазині"],
-      ["Кирилиця та імпорт", "Користувач сам шукає синоніми UA/PL/EN/DE", "Rule engine зі словником ризикових інгредієнтів", "Менше помилок і повторних запитів"],
-      ["Довіра до результату", "Немає видимого джерела рішення", "Confidence score: verified / OCR / community / unknown", "Вища retention через прозорість"],
-      ["Локальна база SKU", "Глобальні apps не покривають long-tail UA товарів", "5-10K перевірених SKU у топ-ритейлерах", "Data moat, який важко швидко скопіювати"],
-      ["B2B layer", "Ритейлер не має allergy-risk API", "Віджет/API для e-commerce картки товару", "Upside поза B2C підпискою"]
+      ["Перевірка складу", "Ручне вивчення складу: 30-60 сек", "Штрихкод або OCR за 3-5 сек", "Менше friction у магазині"],
+      ["Кирилиця та імпорт", "Користувач сам шукає синоніми", "Rule engine UA/PL/EN/DE", "Менше помилок"],
+      ["Довіра до результату", "Немає джерела рішення", "Confidence score + verified layer", "Вища retention"],
+      ["Локальна база SKU", "Глобальні apps без long-tail UA", "5-10K verified SKU", "Data moat"],
+      ["B2B layer", "Немає allergy-risk API", "Віджет/API для e-commerce", "Upside поза B2C"]
     ]
   },
   hypotheses: {
@@ -177,34 +221,43 @@ const data = {
       ["Попит є в Україні", "Лендінг + 30-50 інтервʼю", ">8% waitlist conversion"],
       ["OCR важливіший за базу на старті", "Beta у магазині", ">50% сканів через OCR"],
       ["Люди готові платити", "Pricing test", ">3% trial-to-paid"],
-      ["Дані створюються спільнотою", "Community uploads", ">20% beta users додають/виправляють SKU"],
-      ["Дієтологи знижують CAC", "Пілот із 10 партнерами", "CPA < paid social (гіпотеза; валідувати в пілоті)"]
+      ["Дані створюються спільнотою", "Community uploads", ">20% beta users додають SKU"],
+      ["Дієтологи знижують CAC", "Пілот із 10 партнерами", "CPA < paid social"]
     ]
   },
   risks: {
     headers: ["Ризик", "Ймовірність", "Вплив", "Рекомендація"],
     rows: [
-      ["Неправильна рекомендація", "Висока", "Високий", "Не давати safe guarantee; показувати джерело і confidence"],
-      ["Низьке покриття SKU", "Висока", "Високий", "5-10 тис. SKU у топ-ритейлерах до scale"],
-      ["OCR-помилки", "Середня", "Високий", "Rule engine + user confirmation + фото складу"],
-      ["App Store / Google Play review", "Середня", "Високий", "Не давати медичні поради; джерела даних у результаті; privacy review перед submission"],
-      ["UA маркування алергенів", "Середня", "Високий", "Спиратись на маркування та Закон про інформацію для споживачів; не заявляти сертифікацію gluten-free"],
-      ["Юридичні та регуляторні ризики", "Середня", "Високий", "Review кожного тексту продукту; 'оцінка ризику', не 'гарантія безпеки'; не медичний пристрій"],
-      ["Низька готовність платити", "Середня", "Середній", "Freemium + family plan + B2B2C"],
+      ["Неправильна рекомендація", "Висока", "Високий", "Не давати safe guarantee; confidence + джерело"],
+      ["Низьке покриття SKU", "Висока", "Високий", "5-10 тис. SKU у топ-ритейлерах"],
+      ["OCR-помилки", "Середня", "Високий", "Rule engine + user confirmation"],
+      ["App Store / Google Play review", "Середня", "Високий", "Без медичних порад; privacy review"],
+      ["UA маркування алергенів", "Середня", "Високий", "Маркування + Закон про інформацію для споживачів"],
+      ["Юридичні ризики", "Середня", "Високий", "«Оцінка ризику», не «гарантія безпеки»"],
+      ["Низька готовність платити", "Середня", "Середній", "Freemium + family + B2B2C"],
       ["Копіювання функцій", "Середня", "Середній", "Data moat: локальна база + verified layer"]
     ]
   },
   methodology: {
     headers: ["Блок", "Метод", "Коментар"],
     rows: [
-      ["Global market", "Два research providers", "Grand View Research + Fortune Business Insights, щоб не залежати від одного forecast"],
-      ["Prevalence", "Systematic review/meta-analysis", "0.7% biopsy / 1.4% serology як глобальний proxy"],
-      ["Ukraine sizing", "Scenario-based", "Офіційної актуальної статистики по целіакії немає; демографія має воєнну невизначеність"],
-      ["Primary user insight", "Lived-experience input", "Автор — людина з целіакією в Україні; якісний сигнал проблеми, не статистичний доказ попиту"],
-      ["Competitors", "Store listings + official websites", "Використано public traction: ratings, downloads/users, positioning"],
-      ["Financial model", "Unit economics + sensitivity", "MAU × conversion × ARPPU; CAC/LTV/COGS як feasibility gates"]
+      ["Global market", "Commercial estimates", "Grand View + Fortune BI; use as market benchmark, not scanner TAM"],
+      ["Prevalence", "Systematic review", "0.7% biopsy / 1.4% serology"],
+      ["Ukraine sizing", "Scenario-based", "29.5M population; digital = ×89.6% penetration"],
+      ["Primary insight", "Discovery hypothesis", "Потребує 30-50 інтервʼю + beta; не статистика попиту"],
+      ["Competitors", "Stores + traffic proxies", "Similarweb/SensorTower — order-of-magnitude only"],
+    ["Financial model", "Unit economics + sensitivity", "FX: 40 грн/USD для OCR COGS; ФОП 5% раховано від Gross MRR"]
     ]
   },
+  appendixNotes: [
+    "Населення 29.5 млн: консервативна база від UN WPP (~38 млн) з коригуванням на окуповані території та міграцію; не офіційна держстатистика.",
+    "Digital 26.4 млн: 29.5 млн × 89.6% (DataReportal Ukraine 2026 penetration), а не 35.3 млн internet users на registered-population basis.",
+    "Reachable 60%: proxy penetration e-commerce / digital grocery в UA (~50-70% urban active buyers).",
+    "Reachable 50%: proxy symptom severity / active label-checking need.",
+    "Конвертація OCR: Google Cloud Vision $1.50/1K × 40 грн/USD (planning rate, Appendix).",
+    "ФОП 5% у P&L раховано від Gross MRR до platform fee як консервативний MVP-підхід.",
+    "Конкуренти: self-reported user counts + Similarweb/SensorTower directional proxies; не аудит."
+  ],
   sources: [
     ["Grand View Research", "https://www.grandviewresearch.com/industry-analysis/gluten-free-products-market"],
     ["Fortune Business Insights", "https://www.fortunebusinessinsights.com/industry-reports/gluten-free-food-market-100188"],
@@ -214,11 +267,10 @@ const data = {
     ["DataReportal Ukraine 2026", "https://datareportal.com/reports/digital-2026-ukraine"],
     ["Google Cloud Vision pricing", "https://cloud.google.com/vision/pricing"],
     ["Apple App Review Guidelines", "https://developer.apple.com/app-store/review/guidelines/"],
-    ["Держпродспоживслужба: маркування імпортних харчових продуктів", "https://dpss.gov.ua/news/bezpechnist-kharchovykh-produktiv-markuvannia-importnykh-kharchovykh-produktiv-na-shcho-zvernuty-uvahu-spozhyvachu"],
-    ["Закон України: інформація для споживачів щодо харчових продуктів, ст. 15", "https://zakon.rada.gov.ua/laws/show/2639-19/paran15"],
-    ["USDA GAIN Ukraine labeling report", "https://apps.fas.usda.gov/newgainapi/api/Report/DownloadReportByFileName?fileName=Ukraine+Adopts+New+Labeling+Requirements_Kyiv_Ukraine_01-28-2020"],
+    ["Держпродспоживслужба", "https://dpss.gov.ua/news/bezpechnist-kharchovykh-produktiv-markuvannia-importnykh-kharchovykh-produktiv-na-shcho-zvernuty-uvahu-spozhyvachu"],
+    ["Закон України, ст. 15", "https://zakon.rada.gov.ua/laws/show/2639-19/paran15"],
     ["UN World Population Prospects", "https://population.un.org/wpp/"],
-    ["Worldometer Ukraine population", "https://www.worldometers.info/world-population/ukraine-population/"],
+    ["Worldometer Ukraine population (aggregator cross-check)", "https://www.worldometers.info/world-population/ukraine-population/"],
     ["ECDB Ukraine food eCommerce", "https://ecommercedb.com/markets/ua/food"],
     ["Gluten Free Scanner", "https://glutenfreescanner.app/"],
     ["Gluten Free Scanner App Store", "https://apps.apple.com/us/app/gluten-free-scanner/id1642357030"],
@@ -226,40 +278,98 @@ const data = {
     ["Find Me Gluten Free App Store", "https://apps.apple.com/us/app/find-me-gluten-free/id431006818"],
     ["Find Me Gluten Free Premium", "https://www.findmeglutenfree.com/premium"],
     ["Sansglu", "https://sansglu.com/"],
-    ["BetterMe App Store", "https://apps.apple.com/ua/app/betterme-health-coaching/id1264546236"],
-    ["BetterMe subscription terms", "https://betterme.world/ua/subscription-terms"],
-    ["YAZIO App Store", "https://apps.apple.com/ua/app/yazio-calorie-counter-diet/id946099227"],
-    ["Nutrola: YAZIO pricing 2026", "https://nutrola.app/uk/blog/why-is-yazio-so-expensive-now"],
     ["Open Food Facts API", "https://openfoodfacts.github.io/documentation/docs/Product-Opener/api/"],
     ["Silpo gluten-free category", "https://silpo.ua/category/bezghliutenovi-produkty-4868"],
     ["Українська спілка целіакії", "https://celiac.org.ua/c/index.cfm?sid=50"],
-    ["Food Like Company", "https://ukrainian-food.com.ua/producers/producer/food-like-company"],
-    ["Dobrodiya Foods / WOWOATS AOECS note", "https://www.fin.org.ua/news/1509197"]
+    ["BetterMe App Store", "https://apps.apple.com/ua/app/betterme-health-coaching/id1264546236"],
+    ["BetterMe subscription terms", "https://betterme.world/ua/subscription-terms"],
+    ["YAZIO App Store", "https://apps.apple.com/ua/app/yazio-calorie-counter-diet/id946099227"],
+    ["Food Like Company", "https://foodlike.com.ua/"],
+    ["Dobrodiya Foods / WOWOATS", "https://dobrodiya.com.ua/"]
   ]
 };
 
-function renderTable(targetId, tableData) {
-  const target = document.getElementById(targetId);
-  if (!target) return;
-  const head = tableData.headers.map((header) => `<th>${header}</th>`).join("");
-  const rows = tableData.rows
-    .map((row) => `<tr>${row.map((cell, index) => `<td data-label="${tableData.headers[index]}">${cell}</td>`).join("")}</tr>`)
-    .join("");
-  target.innerHTML = `<thead><tr>${head}</tr></thead><tbody>${rows}</tbody>`;
+const TABLE_COL_WIDTHS = {
+  competitorsTable: [130, 110, 260, 280, 240],
+  decisionTable: [76, 260, 90, 200],
+  gapAnalysisTable: [84, 160, 190, 170],
+  gtmTable: [62, 270, 150, 150],
+  channelsTable: [36, 160, 185, 112, 190],
+  monetizationTable: [72, 120, 230, 160, 170],
+  riskTable: [128, 88, 88, 220],
+  methodologyTable: [88, 210, 220],
+  unitEconomicsTable: [140, 160, 500],
+  pnlTable: [140, 160, 500],
+  b2bTable: [56, 130, 80, 110, 110, 300]
+};
+
+const MOBILE_TABLE_WIDTH_QUERY = "(max-width: 680px)";
+let tableWidthMode = null;
+
+function currentTableWidthMode() {
+  if (typeof window === "undefined" || !window.matchMedia) return "desktop";
+  return window.matchMedia(MOBILE_TABLE_WIDTH_QUERY).matches ? "mobile" : "desktop";
 }
 
-function renderCompetitorCards() {
-  const rows = data.competitorsTable.rows;
-  document.getElementById("competitorsCards").innerHTML = rows.map(([name, focus, traction, weakness]) => `
-    <article class="traction-card">
-      <h4>${name}</h4>
-      <dl>
-        <div><dt>Фокус</dt><dd>${focus}</dd></div>
-        <div><dt>Traction</dt><dd>${traction}</dd></div>
-        <div><dt>Слабке місце для України</dt><dd>${weakness}</dd></div>
-      </dl>
-    </article>
-  `).join("");
+function parseColumnWidths(value) {
+  if (!value) return null;
+  const widths = value.split(",").map((item) => item.trim()).filter(Boolean);
+  return widths.length ? widths : null;
+}
+
+function formatColumnWidth(width) {
+  if (typeof width === "number") return `${width}px`;
+  const value = String(width).trim();
+  if (!value || value.toLowerCase() === "auto") return "auto";
+  return /^-?\d+(\.\d+)?$/.test(value) ? `${value}px` : value;
+}
+
+function getTableColumnWidths(targetId, table) {
+  const mobileWidths = currentTableWidthMode() === "mobile"
+    ? parseColumnWidths(table?.dataset.mobileColWidths)
+    : null;
+  return mobileWidths || TABLE_COL_WIDTHS[targetId];
+}
+
+function renderColgroup(targetId, table) {
+  const widths = getTableColumnWidths(targetId, table);
+  if (!widths) return "";
+  return `<colgroup>${widths.map((w) => {
+    const style = `width:${formatColumnWidth(w)}`;
+    return `<col style="${style}">`;
+  }).join("")}</colgroup>`;
+}
+
+function ensureScrollWrap(table) {
+  if (table.parentElement?.classList.contains("table-scroll-wrap")) return;
+  const wrap = document.createElement("div");
+  wrap.className = "table-scroll-wrap";
+  table.parentNode.insertBefore(wrap, table);
+  wrap.appendChild(table);
+}
+
+function renderTable(targetId, tableData, options = {}) {
+  const table = document.getElementById(targetId);
+  if (!table) return;
+
+  const mobile = options.mobile || "scroll";
+  const tableClass = options.tableClass || (mobile === "stack" ? "table-mobile-stack" : "table-scroll-wide");
+  const useLabels = mobile === "stack";
+  const colgroup = renderColgroup(targetId, table);
+  const head = tableData.headers.map((header) => `<th>${header}</th>`).join("");
+  const rows = tableData.rows
+    .map((row) => `<tr>${row.map((cell, index) => {
+      const labelAttr = useLabels ? ` data-label="${tableData.headers[index]}"` : "";
+      return `<td${labelAttr}>${cell}</td>`;
+    }).join("")}</tr>`)
+    .join("");
+
+  table.className = tableClass;
+  table.innerHTML = `${colgroup}<thead><tr>${head}</tr></thead><tbody>${rows}</tbody>`;
+
+  if (mobile === "scroll") {
+    ensureScrollWrap(table);
+  }
 }
 
 function marketChart() {
@@ -275,51 +385,80 @@ function marketChart() {
 
 function funnelChart() {
   const max = data.funnel[0][1];
-  return data.funnel.map(([label, value, note]) => `
+  const context = `<p class="funnel-context">${data.funnelContext}</p>`;
+  const rows = data.funnel.map(([label, value, note, displayValue]) => {
+    const pct = (value / max) * 100;
+    const width = pct < 0.5 && value > 0 ? 0.5 : pct;
+    return `
     <div class="funnel-row">
       <div>
         <strong>${label}</strong>
         <span>${note}</span>
       </div>
-      <div class="funnel-track"><div style="width:${Math.max((value / max) * 100, 8)}%"></div></div>
-      <b>${fmt.format(value)}</b>
+      <div class="funnel-track"><div style="width:${width}%"></div></div>
+      <b>${displayValue || fmt.format(value)}</b>
     </div>
-  `).join("");
+  `;
+  }).join("");
+  return context + rows;
 }
 
 function segmentChart() {
-  let start = 0;
-  const gradient = data.segments.map(([, value, color]) => {
-    const end = start + value;
-    const part = `${color} ${start}% ${end}%`;
-    start = end;
-    return part;
-  }).join(", ");
-  const legend = data.segments.map(([label, value, color]) => `
-    <li><i style="background:${color}"></i><span>${label}</span><strong>${value}%</strong></li>
+  return renderSegmentPriorityTable();
+}
+
+function renderSegmentPriorityTable() {
+  const priorityClass = (p) => {
+    const key = String(p).toLowerCase();
+    if (key === "high" || key === "core") return "priority-high";
+    if (key === "medium" || key === "secondary") return "priority-medium";
+    return "priority-low";
+  };
+  const head = data.segmentPriorities.headers.map((h) => `<th>${h}</th>`).join("");
+  const rows = data.segmentPriorities.rows.map((row) => `
+    <tr>${row.map((cell, i) => {
+      const labelAttr = ` data-label="${data.segmentPriorities.headers[i]}"`;
+      if (i === 1 || i === 2) {
+        return `<td${labelAttr}><span class="priority-pill ${priorityClass(cell)}">${cell}</span></td>`;
+      }
+      return `<td${labelAttr}>${cell}</td>`;
+    }).join("")}</tr>
   `).join("");
-  return `
-    <div class="donut-wrap vertical">
-      <div class="donut" style="--segments:${gradient}"></div>
-      <ul class="legend">${legend}</ul>
-    </div>
-  `;
+  const colgroup = `<colgroup>
+    <col class="col-seg-name">
+    <col class="col-seg-need">
+    <col class="col-seg-mvp">
+    <col class="col-seg-note">
+  </colgroup>`;
+  return `<div class="segment-table-wrap"><table class="segment-priority-table">${colgroup}<thead><tr>${head}</tr></thead><tbody>${rows}</tbody></table></div>`;
+}
+
+function matrixMarker(color, id) {
+  const contrast = labelContrast(color);
+  return { contrast, className: `dot-label-${contrast}` };
 }
 
 function competitorMatrix() {
   return `
-    <div class="matrix">
-      <span class="axis x">Покриття товарів</span>
-      <span class="axis y">Локальна релевантність</span>
-      ${data.competitors.map(([id, name, x, y, color, note]) => `
-        <div class="dot" style="left:${x}%; bottom:${y}%; --dot-color:${color};" title="${name}: ${note}">
-          <span>${id}</span>
-        </div>
-      `).join("")}
+    <div class="matrix-layout">
+      <div class="matrix">
+        <span class="axis x">Покриття товарів</span>
+        <span class="axis y">Локальна релевантність</span>
+        ${data.competitors.map(([id, name, x, y, color, note]) => {
+          const { className } = matrixMarker(color, id);
+          return `
+        <div class="dot ${className}${id === "5" ? " target-dot" : ""}" style="left:${x}%; bottom:${y}%; --dot-color:${color};" title="${name}: ${note}">
+            <span>${id}</span>
+          </div>`;
+        }).join("")}
+      </div>
+      <ol class="chart-legend compact">
+        ${data.competitors.map(([id, name, , , color, note]) => {
+          const { className } = matrixMarker(color, id);
+        return `<li class="${id === "5" ? "target-legend" : ""}" style="--dot-color:${color};"><b class="${className}">${id}</b><strong>${name}</strong><span>${note}</span></li>`;
+        }).join("")}
+      </ol>
     </div>
-    <ol class="chart-legend compact">
-      ${data.competitors.map(([id, name, , , color, note]) => `<li style="--dot-color:${color};"><b>${id}</b><strong>${name}</strong><span>${note}</span></li>`).join("")}
-    </ol>
   `;
 }
 
@@ -336,33 +475,37 @@ function revenueChart() {
 }
 
 function sensitivityHeatmap() {
-  const { mau, conversion, arppu } = data.sensitivity;
+  const { mau, columns } = data.sensitivity;
   const values = [];
-  mau.forEach((m) => conversion.forEach((c) => values.push(Math.round(m * (c / 100) * arppu))));
+  mau.forEach((m) => columns.forEach(({ conversion, arppu }) => {
+    values.push(Math.round(m * (conversion / 100) * arppu));
+  }));
   const max = Math.max(...values);
   return `
-    <div class="heatmap">
-      <div></div>
-      ${conversion.map((c) => `<b>${c}% paid</b>`).join("")}
-      ${mau.map((m) => `
-        <b>${fmt.format(m)} MAU</b>
-        ${conversion.map((c) => {
-          const v = Math.round(m * (c / 100) * arppu);
-          const alpha = 0.18 + (v / max) * 0.72;
-          const isBase = m === 20000 && c === 3;
-          return `<span class="${isBase ? "base-cell" : ""}" style="background:rgba(91,163,60,${alpha})">${fmt.format(v)}<small>грн MRR${isBase ? " · Base" : ""}</small></span>`;
-        }).join("")}
-      `).join("")}
+    <div class="heatmap-scroll">
+      <div class="heatmap">
+        <b>MAU ↓</b>
+        ${columns.map(({ label }) => `<b>${label}</b>`).join("")}
+        ${mau.map((m) => `
+          <b>${fmt.format(m)} MAU</b>
+          ${columns.map(({ conversion, arppu }) => {
+            const v = Math.round(m * (conversion / 100) * arppu);
+            const mix = Math.round(14 + (v / max) * 72);
+            const isBase = m === 20000 && conversion === 3 && arppu === 129;
+            return `<span class="heatmap-cell${isBase ? " base-cell" : ""}" style="--heat:${mix}%">${fmt.format(v)}<small>грн MRR${isBase ? " · Base" : ""}</small></span>`;
+          }).join("")}
+        `).join("")}
+      </div>
     </div>
   `;
 }
 
 function skuRampChart() {
-  const maxSku = Math.max(...data.skuRamp.map(([, sku]) => sku));
+  const maxSku = Math.max(...data.skuRamp.map(([, sku]) => sku), 1);
   return data.skuRamp.map(([label, sku, community]) => `
     <div class="sku-row">
       <strong>${label}</strong>
-      <div class="track"><div style="width:${Math.max((sku / maxSku) * 100, 4)}%"></div></div>
+      <div class="track"><div style="width:${sku ? (sku / maxSku) * 100 : 0}%"></div></div>
       <span>${fmt.format(sku)} SKU</span>
       <small>${community}% target community</small>
     </div>
@@ -370,43 +513,62 @@ function skuRampChart() {
 }
 
 function driverImpactChart() {
-  const max = Math.max(...data.driverImpact.items.map(([, value]) => Math.abs(value)));
-  return data.driverImpact.items.map(([label, value, type]) => {
-    const width = (Math.abs(value) / max) * 50;
-    const positive = type === "positive";
-    return `
-      <div class="impact-row ${positive ? "positive" : "negative"}">
-        <span>${label}</span>
-        <div class="impact-track">
-          <i class="zero"></i>
-          <b style="${positive ? `left:50%;width:${width}%` : `right:50%;width:${width}%`}"></b>
-        </div>
-        <strong>${positive ? "+" : ""}${value}</strong>
+  return `
+    <div class="driver-layout">
+      <div class="matrix driver-matrix">
+        <span class="axis x">Feasibility</span>
+        <span class="axis y">Impact</span>
+        ${data.driverMatrix.map(([id, label, x, y, color]) => {
+          const { className } = matrixMarker(color, id);
+          return `
+          <div class="dot ${className}" style="left:${x}%; bottom:${y}%; --dot-color:${color};" title="${label}">
+            <span>${id}</span>
+          </div>`;
+        }).join("")}
       </div>
-    `;
-  }).join("");
+      <ol class="chart-legend driver-legend">
+        ${data.driverMatrix.map(([id, label, , , color]) => {
+          const { className } = matrixMarker(color, id);
+          return `<li style="--dot-color:${color};"><b class="${className}">${id}</b><strong>${label}</strong></li>`;
+        }).join("")}
+      </ol>
+    </div>
+  `;
 }
 
 function riskMatrix() {
   return `
     <div class="risk-layout">
       <div class="risk-grid">
-        ${data.riskMatrix.map(([id, label, x, y, color]) => `
-          <div class="risk-dot" style="left:${x}%; bottom:${y}%; --dot-color:${color};" title="${label}">
+        ${data.riskMatrix.map(([id, label, x, y, color]) => {
+          const { className } = matrixMarker(color, id);
+          return `
+          <div class="risk-dot ${className}" style="left:${x}%; bottom:${y}%; --dot-color:${color};" title="${label}">
             <span>${id}</span>
-          </div>
-        `).join("")}
+          </div>`;
+        }).join("")}
         <b class="risk-x">Ймовірність</b>
         <b class="risk-y">Вплив</b>
       </div>
       <ol class="chart-legend risk-legend">
-        ${data.riskMatrix.map(([id, label, , , color]) => `<li style="--dot-color:${color};"><b>${id}</b><strong>${label}</strong></li>`).join("")}
+        ${data.riskMatrix.map(([id, label, , , color]) => {
+          const { className } = matrixMarker(color, id);
+          return `<li style="--dot-color:${color};"><b class="${className}">${id}</b><strong>${label}</strong></li>`;
+        }).join("")}
       </ol>
     </div>
   `;
 }
 
+function renderAppendixNotes() {
+  const el = document.getElementById("appendixNotes");
+  if (!el) return;
+  el.innerHTML = data.appendixNotes.map((note) => `<li>${note}</li>`).join("");
+}
+
 function render() {
+  tableWidthMode = currentTableWidthMode();
+
   document.getElementById("metricGrid").innerHTML = data.metrics.map(([label, value, note]) => `
     <article class="metric">
       <small>${label}</small>
@@ -425,19 +587,20 @@ function render() {
   document.getElementById("driverImpactChart").innerHTML = driverImpactChart();
   document.getElementById("riskMatrix").innerHTML = riskMatrix();
 
-  renderTable("audienceTable", data.audience);
+  renderTable("audienceTable", data.audience, { mobile: "stack" });
+  renderTable("hypothesisTable", data.hypotheses, { mobile: "stack" });
   renderTable("decisionTable", data.decision);
-  renderCompetitorCards();
+  renderTable("competitorsTable", data.competitorsTable);
   renderTable("gapAnalysisTable", data.gapAnalysis);
   renderTable("gtmTable", data.gtm);
   renderTable("channelsTable", data.channels);
   renderTable("monetizationTable", data.monetization);
-  renderTable("b2bTable", data.b2b);
-  renderTable("unitEconomicsTable", data.unitEconomics);
-  renderTable("pnlTable", data.pnl);
-  renderTable("hypothesisTable", data.hypotheses);
+  renderTable("b2bTable", data.b2b, { tableClass: "table-b2b" });
+  renderTable("unitEconomicsTable", data.unitEconomics, { tableClass: "table-financial" });
+  renderTable("pnlTable", data.pnl, { tableClass: "table-financial" });
   renderTable("riskTable", data.risks);
   renderTable("methodologyTable", data.methodology);
+  renderAppendixNotes();
 
   document.getElementById("sourceList").innerHTML = data.sources.map(([label, url]) => `
     <li><a href="${url}" target="_blank" rel="noreferrer">${label}</a></li>
@@ -445,3 +608,11 @@ function render() {
 }
 
 render();
+
+let resizeTimer;
+window.addEventListener("resize", () => {
+  window.clearTimeout(resizeTimer);
+  resizeTimer = window.setTimeout(() => {
+    if (currentTableWidthMode() !== tableWidthMode) render();
+  }, 120);
+});

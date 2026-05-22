@@ -12,17 +12,15 @@
 
 **Що це:** продукт перевіряє харчовий товар за 3-5 секунд через штрихкод, OCR складу або пошук. Цільова аудиторія — люди з целіакією/чутливістю, родини й покупці, які регулярно перевіряють склад. Українська перевага — локальні SKU, кирилиця, імпортні етикетки та пояснюваний confidence score. Масштабування виправдане тільки після proof of repeat usage, SKU growth і paid intent.
 
-**Первинний user insight:** автор — людина з целіакією в Україні; продуктова гіпотеза спирається на власний досвід перевірки складу під час покупок. Це первинний якісний сигнал проблеми, але не замінює валідацію розміру аудиторії, willingness-to-pay і repeat usage через MVP.
+**Ключова гіпотеза:** читання етикеток у магазині — болісна точка з достатньо вузькою аудиторією, щоб будувати нішевий сервіс, і недостатньо широкою, щоб виправдати венчурні інвестиції без proof of repeat usage і paid intent.
 
-**Чому зараз:** глобальний ринок gluten-free продуктів оцінюється в **~8.1-8.5 млрд USD у 2025** і прогнозується до **15.4-18.3 млрд USD до 2032-2033** з CAGR **~9.6-10.1%** за оцінками Fortune Business Insights і Grand View Research. Поширеність целіакії глобально оцінена в **1.4% за серологією** та **0.7% за біопсією** у systematic review/meta-analysis.
-
-**Україна:** офіційної актуальної статистики по целіакії немає; демографічні оцінки на 2026 різняться через війну, міграцію та окуповані території. Для продуктової моделі використано консервативний робочий базис **29.5 млн наявного населення**. Це припущення для сценарної моделі, не офіційна статистика.
+**Україна:** офіційної актуальної статистики по целіакії немає. База моделі: **29.5 млн** наявного населення (UN ~38 млн мінус окуповані території та чиста еміграція — estimated). **Digital addressable: ~26.4 млн** = 29.5 млн × 89.6% internet penetration (DataReportal proxy на нашій демобазі, не 35.3 млн raw). **FX для OCR:** 40 грн/USD. *Scenario-based · estimated.*
 
 **TAM/SAM/SOM, Україна, scenario model:**  
-- Patient proxy: **~295 тис.** осіб = 29.5 млн × 1.0% global celiac proxy.  
-- Reachable TAM: **90-250 тис.** потенційних користувачів: low case = 295 тис. × 60% reachable × 50% active need; high case додає родини й lifestyle-суміжність.  
+- Patient proxy: **~295 тис.** = 29.5 млн × 1.0% global celiac proxy.  
+- Reachable TAM: **90-250 тис.** — low: 295K × **60% e-commerce penetration proxy** × **50% symptom severity filter**; high додає родини/lifestyle.  
 - SAM: **20-60 тис.** активних користувачів у великих містах і онлайн-покупках.  
-- SOM 24 міс.: **3-12 тис. MAU**, якщо продукт має сильне покриття локальних SKU.
+- SOM 24 міс.: **5-20 тис. MAU** як low/base range; **50 тис. MAU** — stretch-сценарій для фінансової чутливості, не базовий SOM.
 
 **Ключовий ризик:** не попит, а **якість локальної бази**. Глобальні конкуренти сильні в США/ЄС, але слабше покривають українські товари, кирилицю, локальні бренди, імпорт із Польщі/Італії/Німеччини та українські ритейлери.
 
@@ -30,12 +28,12 @@
 
 ### Decision dashboard
 
-| Питання | Відповідь | Рівень впевненості | Що перевірити |
+| Невідоме | Що тестує MVP | Deadline | Gate |
 |---|---|---:|---|
-| Чи є ринковий tailwind? | Так: global gluten-free food market росте ~9.6-10.1% CAGR | Високий | Не потрібно |
-| Чи є проблема в Україні? | Так, але розмір платної аудиторії треба довести | Середній | 30-50 інтервʼю + waitlist |
-| Чи можна відрізнитись від глобальних конкурентів? | Так, через UA SKU, кирилицю, локальні ритейлери | Середній | 5-10 тис. SKU + repeat scans |
-| Чи це venture-scale одразу? | Ні для gluten-only Ukraine; потенційно так для allergy scanner + CEE | Середній | B2B interest + регіональні тести |
+| Repeat usage | Чи повертаються beta users у магазині без нагадування | Day 60 | >2 scans/user/week; >50% repeat users |
+| Paid intent | Чи платить вузька аудиторія за безліміт/OCR/history | Day 90 | >3% trial-to-paid |
+| SKU growth | Чи можна зібрати й перевірити локальну базу без ручного burn | Day 90 | 5-10K verified SKU |
+| B2B pull | Чи є інтерес ритейлерів/GF-брендів до verified layer/API | Day 90 | 2-3 LOI або pilot talks |
 
 ## 2. Market Opportunity
 
@@ -43,38 +41,43 @@
 
 | Факт | Значення | Джерело |
 |---|---:|---|
-| Gluten-free food market, 2025 | 8.12 млрд USD | Fortune Business Insights |
-| Forecast до 2032 | 15.45 млрд USD | Fortune Business Insights |
-| CAGR 2025-2032 | 9.62% | Fortune Business Insights |
-| Gluten-free products market, 2025 | 8.50 млрд USD | Grand View Research |
-| Forecast до 2033 | 18.32 млрд USD | Grand View Research |
-| CAGR 2026-2033 | 10.1% | Grand View Research |
+| Gluten-free food market, 2025 | 8.12 млрд USD | Fortune Business Insights, commercial estimate |
+| Forecast до 2032 | 15.45 млрд USD | Fortune Business Insights, commercial estimate |
+| CAGR 2025-2032 | 9.62% | Fortune Business Insights, commercial estimate |
+| Gluten-free products market, 2025 | 8.50 млрд USD | Grand View Research, commercial estimate |
+| Forecast до 2033 | 18.32 млрд USD | Grand View Research, commercial estimate |
+| CAGR 2026-2033 | 10.1% | Grand View Research, commercial estimate |
 | Поширеність целіакії | 1.4% serology / 0.7% biopsy | Singh et al., systematic review |
 
 **Інтерпретація:** ринок продуктів росте швидко, але застосунок-сканер не монетизує весь food market. Його реальний opportunity — сервісний шар: зниження невизначеності при покупці, локальна база товарів, історія сканів, персональні профілі алергенів, B2B API для ритейлерів.
+
+Проміжні точки 2028 і 2030 у HTML-графіку — лінійна інтерполяція між опублікованими endpoint-прогнозами двох research providers, не окремі опубліковані market data points.
 
 ### 2.2 Україна
 
 | Факт | Значення | Джерело |
 |---|---:|---|
-| Наявне населення для моделі, 2026 | 29.5 млн | Консервативне припущення автора |
-| Населення України, UN/Worldometer benchmark | верхня демографічна рамка, не база моделі | UN / Worldometer |
-| Internet users, end-2025 | 35.3 млн; 89.6% penetration | DataReportal 2026 |
+| Наявне населення для моделі, 2026 | 29.5 млн | UN ~38M мінус окуповані території та міграція (estimated) |
+| Digital addressable (модель) | ~26.4 млн | 29.5M × 89.6% penetration — єдина цифрова база |
+| DataReportal internet users (raw) | 35.3 млн | Registered-population basis; не використовується в моделі |
+| FX для OCR COGS | 40 грн/USD | Planning rate (Appendix) |
 | Cellular mobile connections, late-2025 | 55.0 млн; 140% of population | DataReportal 2026 |
 | Food eCommerce Ukraine, 2025 forecast | 179.1 млн USD | ECDB |
-| Поріг “gluten-free” | <20 mg/kg або 20 ppm | FDA / AOECS / USDA GAIN Україна |
+| Поріг “gluten-free” | <20 mg/kg або 20 ppm | FDA / AOECS як міжнародні benchmark; UA claims мають перевірятись за законом України |
 
-**Обмеження даних:** офіційної актуальної статистики по целіакії в Україні немає; демографічні дані нестабільні через війну та міграцію. Market sizing подано сценарно — це коректний підхід за таких умов невизначеності.
+**Обмеження даних:** офіційної статистики по целіакії в UA немає. Digital base узгоджено: penetration застосовано до 29.5 млн, а не до 35.3 млн DataReportal. Market sizing — scenario-based.
 
 ### 2.3 TAM/SAM/SOM, Україна
 
 | Рівень | Оцінка | Логіка |
 |---|---:|---|
-| Patient proxy | ~295 тис. | 29.5 млн × 1.0% global celiac proxy |
-| Reachable TAM | 90-250 тис. | Low: 295K × 60% reachable × 50% active need ≈ 90K; high додає родини/lifestyle adjacency |
+| Available population | 29.5 млн | UN WPP adjusted for war/migration |
+| Digital addressable | ~26.4 млн | 29.5M × 89.6% |
+| Patient proxy | ~295 тис. | × 1.0% celiac proxy |
+| Reachable TAM | 90-250 тис. | 60% e-commerce proxy × 50% symptom filter (low) |
 | SAM | 20-60 тис. | Активні цифрові користувачі у великих містах і онлайн-покупках |
-| SOM, 24 міс. | 3-12 тис. MAU | Досяжна частка за умови локальної бази SKU, комʼюніті та партнерств |
-| Paid users | 60-720 | 2-6% paid conversion від SOM при freemium |
+| SOM, 24 міс. | 5-20 тис. MAU; 50 тис. stretch | Low/base відповідає фінмоделі; stretch показує upside після сильного SKU coverage |
+| Paid users | 100-600 base; до 3,000 stretch | 2-3% paid conversion для low/base; 6% у stretch-сценарії |
 
 **Гіпотеза:** Україна не є самостійним venture-scale ринком для gluten-only app. Але може бути прибутковим beachhead і data lab для ширшого “алергенного сканера” у Східній Європі. Reachable TAM не є офіційною статистикою: нижня межа моделює активну цифрову аудиторію з медичною потребою, верхня додає родини й lifestyle-суміжність.
 
@@ -105,11 +108,13 @@
 
 | Конкурент | Фокус | Доказ traction | Сильні сторони | Слабкі місця для України |
 |---|---|---:|---|---|
-| Gluten Free Scanner | Штрихкод + ingredient checker | App Store: 9.5K ratings, 4.9 (platform-verified); 1M+ users, 4.8 rating (self-reported, офіційний сайт) | Простий barcode UX, велика база, offline mode | Немає явного фокусу на Україні, кирилиці, локальних SKU |
-| Find Me Gluten Free | Ресторани | Google Play: 1M+ downloads, 4.8, 13K+ reviews; App Store: 4.9, 24K ratings | Сильне restaurant discovery і community reviews | Не вирішує grocery scanning; в Україні ймовірно мало GF-закладів у базі, тому цінність нижча |
-| Sansglu | Ресторани | 50K+ users, rating 5.0 (self-reported, офіційний сайт; мала вибірка) | Safety scores, celiac-focused filters | Менший масштаб, не grocery-first |
+| Gluten Free Scanner | Штрихкод + ingredient checker | App Store 4.9/9.5K ratings; 1M+ users (self-reported); Similarweb/SensorTower ~200-400K global MAU order-of-magnitude (estimated) | Barcode UX, велика база | Слабкий UA/кирилиця фокус |
+| Find Me Gluten Free | Ресторани | 1M+ GP downloads; App Store 4.9/24K; low UA locale share (estimated) | Restaurant discovery | Не grocery-first; мало GF-закладів у UA |
+| Sansglu | Ресторани | 50K+ users (self-reported); SensorTower &lt;50K lifetime downloads proxy (estimated) | Celiac filters | Менший масштаб |
 | Open Food Facts clients | База продуктів / API | Open API, глобальна база | Безкоштовна база, barcode foundation | Якість і повнота залежать від країни та community |
 | General food scanners | Nutrition/additives | Ширша аудиторія | Легший mass-market positioning | Не спеціалізовані на целіакії та gluten-risk |
+
+**Indirect threat:** BetterMe, YAZIO або general food scanners можуть зайти в gluten niche, якщо побачать repeat usage і платний інтент. Захист — локальна SKU-база, кирилиця, verified layer і community QA, а не сама функція сканування.
 
 **Приклади локальних UA виробників gluten-free лінійок:** Food Like Company, Dobrodiya Foods / WOWOATS — потенційні партнери для verified brand profile та тестування B2B API.
 
@@ -117,7 +122,7 @@
 
 | Gap | As-Is | To-Be MVP | Business impact |
 |---|---|---|---|
-| Перевірка складу | Ручне читання етикетки, 1-3 хв/товар | Штрихкод або OCR за 3-5 сек | Менше friction у магазині |
+| Перевірка складу | Ручне вивчення складу: 30-60 сек на новий товар, високе когнітивне навантаження | Штрихкод або OCR за 3-5 сек | Менше friction і страху помилки в магазині |
 | Кирилиця та імпорт | Користувач сам шукає синоніми UA/PL/EN/DE | Rule engine зі словником ризикових інгредієнтів | Менше помилок і повторних запитів |
 | Довіра до результату | Немає видимого джерела рішення | Confidence score: verified / OCR / community / unknown | Вища retention через прозорість |
 | Локальна база SKU | Глобальні apps не покривають long-tail UA товарів | 5-10K перевірених SKU у топ-ритейлерах | Data moat, який важко швидко скопіювати |
@@ -126,7 +131,7 @@
 ### Позиціонування
 
 **Рекомендована позиція:** “Український сканер складу та штрихкоду для глютенового ризику”.  
-**Не позиціонувати:** “AI magic” — продукт не використовує ML як core mechanism; “гарантовано безпечно” — cross-contamination не визначається; “медичний пристрій” — регуляторні наслідки без клінічної валідації неприйнятні.
+**Не позиціонувати:** “AI-інтерпретація” — продукт має використовувати детермінований rule engine, бо галюцинації LLM у контексті харчових алергій несуть юридичний ризик; “гарантовано безпечно” — cross-contamination не визначається; “медичний пристрій” — регуляторні наслідки без клінічної валідації неприйнятні.
 
 ### Диференціація
 
@@ -208,7 +213,7 @@ KPI каналів — гіпотези для пілоту. Вони не є be
 | B2B API | setup + monthly fee | Ритейлери, бренди, e-commerce | LOI validation needed |
 | Verified brand profile | annual fee | Бренди з gluten-free лінійками | Brand validation needed |
 
-Ціноутворення 129 грн/міс — локальна willingness-to-pay гіпотеза, не доведений benchmark. Find Me Gluten Free і Gluten Free Scanner майже не працюють як українські pricing references: вони корисні тільки як global category ceiling, бо не доводять готовність платити саме в Україні. Для орієнтиру: Find Me Gluten Free Premium коштує $24.99/рік для individual plan і $39.99/рік для Family Plan; Gluten Free Scanner у App Store має free download і платні IAP/subscription options, що відрізняються за регіоном. Для sanity check по ширшій food/wellness категорії Nutrola у 2026 оцінює YAZIO PRO приблизно в €4-6/міс, а Nutrola Premium — у €2.50/міс. BetterMe не використовується як чистий paid benchmark для України, бо за умовами сервісу українські користувачі можуть мати безкоштовний доступ. Діапазон 99-149 грн має перевірятися локально через pricing test і trial-to-paid cohort.
+Ціноутворення 129 грн/міс — локальна willingness-to-pay гіпотеза, не доведений benchmark. Find Me Gluten Free і Gluten Free Scanner майже не працюють як українські pricing references: вони корисні тільки як global category ceiling, бо не доводять готовність платити саме в Україні. Для орієнтиру: Find Me Gluten Free Premium коштує $24.99/рік для individual plan і $39.99/рік для Family Plan; Gluten Free Scanner у App Store має free download і платні IAP/subscription options, що відрізняються за регіоном. Для ширшого health/wellness контексту використані офіційні App Store / terms сторінки YAZIO і BetterMe; BetterMe не використовується як чистий paid benchmark для України, бо за умовами сервісу українські користувачі можуть мати безкоштовний доступ. Діапазон 99-149 грн має перевірятися локально через pricing test і trial-to-paid cohort.
 
 ## 7. Financial Projections
 
@@ -220,22 +225,24 @@ KPI каналів — гіпотези для пілоту. Вони не є be
 | Base | 20,000 | 3% | 129 грн | 77,400 грн |
 | High | 50,000 | 6% | 149 грн | 447,000 грн |
 
-Примітка: paid conversion знижено до 2-6%, щоб не моделювати 15% як нереалістичний high-case без benchmark. High-сценарій припускає premium tier із ARPPU 149 грн; sensitivity heatmap у HTML використовує ті самі MAU-точки 5K / 20K / 50K, але фіксує ARPPU 129 грн, щоб ізолювати вплив MAU і paid conversion.
+Примітка: paid conversion 2-6%. Sensitivity heatmap: колонки **2%/99 грн · 3%/129 грн · 6%/149 грн** (узгоджено з Low/Base/High).
 
 ### 7.2 Unit economics gate
 
 | Метрика | Base assumption | Логіка / формула |
 |---|---:|---|
 | ARPPU | 129 грн/міс | Ціна Plus у base-сценарії |
-| Churn | 20%/міс | Гіпотеза для early wellness/utilities subscription |
-| Lifetime | 5 міс. | 1 / monthly churn |
-| LTV gross | 645 грн | 129 грн × 5 міс. |
-| Target CAC ceiling | 215 грн | LTV / CAC = 3x |
-| OCR COGS | ~0.06 грн/scan | $1.50 / 1,000 OCR images × 40 грн/USD |
-| Base OCR subsidy | ~21 грн/paid user | При 3% conversion на 1 paid припадає ~32 free users: (32 × 10 + 1 × 30) × 0.06 грн |
-| Contribution after OCR | ~108 грн/paid user/month | ARPPU - OCR subsidy; без app store fees, support і hosting |
+| Churn, pessimistic | 20%/міс | Base model до beta-retention даних; lifetime = 5 міс. |
+| Churn, retention upside | 7%/міс | Sensitivity only; lifetime ≈ 14 міс. після доказу repeat usage |
+| LTV gross, pessimistic | 645 грн | 129 грн × 5 міс. |
+| Target CAC ceiling | 215 грн | LTV/3; ≈6.45 грн/free user при 3% conversion |
+| Contribution after OCR | ~108 грн/міс | ARPPU − OCR subsidy |
+| **CAC payback** | **~2 міс.** | 215 ÷ 108 ≈ 2 міс. — ключовий viability gate |
+| OCR COGS | ~0.06 грн/scan | $1.50/1K × **40 грн/USD** |
+| Base OCR subsidy | ~21 грн/paid user | (97%/3% ≈ 32 free на 1 paid; 32×10 + 1×30) × 0.06 грн |
+| Distribution | Community-first | Paid social не primary до retention proof |
 
-Висновок: freemium має сенс тільки з лімітом OCR. Якщо безкоштовний користувач отримує 10-20 OCR-сканів щомісяця, OCR COGS не вбиває модель сам по собі, але зменшує contribution margin і підсилює вимогу до CAC discipline.
+Висновок: при contribution ~108 грн/міс окупність CAC ~2 міс. — сильний сигнал життєздатності ніші, якщо acquisition лишається community/referral-first.
 
 ### 7.3 Base P&L bridge
 
@@ -246,22 +253,22 @@ KPI каналів — гіпотези для пілоту. Вони не є be
 | OCR volume | 212,000 scans | 600 paid × 30 OCR + 19,400 free × 10 OCR |
 | OCR API COGS | -12,720 | 212,000 OCR scans × ~0.06 грн |
 | Hosting + support | -8,000 | Lean MVP infrastructure/support assumption |
-| SKU QA / moderation | -30,000 | Part-time data ops / moderator budget |
-| Податки (ФОП 3 група, 5%) | -3,870 | 5% від Gross MRR |
+| SKU QA / moderation | -30,000 | Rough estimate: ~50 год/міс × 600 грн/год; validate before scale |
+| Податки (ФОП 3 група, 5%) | -3,870 | 5% від Gross MRR до platform fee; conservative MVP assumption |
 | Contribution margin (Net) | 11,200 | Залишок після COGS, комісій та 5% податку; бюджет на маркетинг та команду |
 | Net contribution margin | 14% | 11,200 / 77,400 |
 
 Висновок: base-сценарій може бути self-sustaining лише як lean MVP з жорстким OCR-лімітом і дешевим acquisition. Це ще не P&L-positive компанія, бо таблиця не включає зарплати команди, paid media та юридичний супровід.
 
-### 7.4 Україна, B2B add-on
+### 7.4 Україна, B2B upside, pre-LOI hypothesis
 
-| Сценарій | Тип клієнтів | Клієнти | Середній MRR/клієнт | B2B MRR |
-|---|---|---:|---:|---:|
-| Low | 1 GF-бренд або дієтологічна мережа | 1 | 10,000 грн | 10,000 грн |
-| Base | Ритейлер + 2 бренди / клініки | 3 | 25,000 грн | 75,000 грн |
-| High | Ритейлери, e-commerce, GF-бренди | 8 | 40,000 грн | 320,000 грн |
+| Сценарій | Тип клієнтів | Клієнти | MRR/клієнт | B2B MRR | Proxy |
+|---|---|---:|---:|---:|---|
+| Low | 1 GF-бренд / дієтмережа | 1 | 5,000 грн | 5,000 грн | Базовий SaaS МСБ UA ~3-7K/міс |
+| Base | Ритейлер + 2 бренди | 3 | 8,000 грн | 24,000 грн | CRM/API lite tier |
+| High | Ритейл + e-com + бренди | 8 | 15,000 грн | 120,000 грн | E-commerce plugin + catalog |
 
-**Примітка:** MRR/клієнт — гіпотеза без підтвердженого прецеденту на UA ринку. Потребує валідації через LOI з конкретними ритейлерами або GF-брендами до того, як B2B додається в фінансову модель як надійний сценарій.
+**Примітка:** B2B виключений із base P&L до LOI. MRR — гіпотеза з proxy малого SaaS/API в UA, не підтверджений прецедент.
 
 ### 7.5 Висновок по фінансах
 
@@ -312,40 +319,40 @@ KPI каналів — гіпотези для пілоту. Вони не є be
 3. Singh et al. — Global Prevalence of Celiac Disease: Systematic Review and Meta-analysis: https://www.sciencedirect.com/science/article/pii/S1542356517307838  
 4. FDA — Gluten-Free Means What It Says: https://www.fda.gov/consumers/consumer-updates/gluten-free-means-what-it-says  
 5. AOECS — Gluten Free Certification: https://www.aoecs.org/working-with-food/gluten-free-certification/  
-6. USDA GAIN — Ukraine adopts new labeling requirements: https://apps.fas.usda.gov/newgainapi/api/Report/DownloadReportByFileName?fileName=Ukraine+Adopts+New+Labeling+Requirements_Kyiv_Ukraine_01-28-2020  
-7. DataReportal — Digital 2026 Ukraine, Internet use section; 35.3 млн internet users, 89.6% penetration, 55.0 млн cellular mobile connections: https://datareportal.com/reports/digital-2026-ukraine  
-8. UN World Population Prospects: https://population.un.org/wpp/  
-9. Worldometer — Ukraine Population 2026: https://www.worldometers.info/world-population/ukraine-population/  
-10. ECDB — Food eCommerce market in Ukraine: https://ecommercedb.com/markets/ua/food  
-11. Gluten Free Scanner official site: https://glutenfreescanner.app/  
-12. Gluten Free Scanner App Store page: https://apps.apple.com/us/app/gluten-free-scanner/id1642357030  
-13. Find Me Gluten Free Google Play: https://play.google.com/store/apps/details?id=com.fmgf.free  
-14. Find Me Gluten Free App Store ratings: https://apps.apple.com/us/app/find-me-gluten-free/id431006818  
-15. Find Me Gluten Free Premium: https://www.findmeglutenfree.com/premium  
-16. Sansglu official site: https://sansglu.com/  
-17. Open Food Facts API docs: https://openfoodfacts.github.io/documentation/docs/Product-Opener/api/  
-18. Google Cloud Vision pricing: https://cloud.google.com/vision/pricing  
-19. Apple App Review Guidelines: https://developer.apple.com/app-store/review/guidelines/  
-20. Держпродспоживслужба — маркування імпортних харчових продуктів: https://dpss.gov.ua/news/bezpechnist-kharchovykh-produktiv-markuvannia-importnykh-kharchovykh-produktiv-na-shcho-zvernuty-uvahu-spozhyvachu  
-21. Закон України, ст. 15 — інформація про алергени: https://zakon.rada.gov.ua/laws/show/2639-19/paran15  
-22. BetterMe App Store listing: https://apps.apple.com/ua/app/betterme-health-coaching/id1264546236  
-23. BetterMe subscription terms: https://betterme.world/ua/subscription-terms  
-24. YAZIO App Store listing: https://apps.apple.com/ua/app/yazio-calorie-counter-diet/id946099227  
-25. Nutrola — YAZIO pricing 2026: https://nutrola.app/uk/blog/why-is-yazio-so-expensive-now  
-26. Silpo gluten-free category: https://silpo.ua/category/bezghliutenovi-produkty-4868  
-27. Українська спілка целіакії: https://celiac.org.ua/c/index.cfm?sid=50  
-28. Food Like Company profile: https://ukrainian-food.com.ua/producers/producer/food-like-company  
-29. Dobrodiya Foods / WOWOATS AOECS certification note: https://www.fin.org.ua/news/1509197  
+6. DataReportal — Digital 2026 Ukraine, Internet use section; 35.3 млн internet users, 89.6% penetration, 55.0 млн cellular mobile connections: https://datareportal.com/reports/digital-2026-ukraine  
+7. UN World Population Prospects: https://population.un.org/wpp/  
+8. Worldometer — Ukraine Population 2026, aggregator / cross-check only: https://www.worldometers.info/world-population/ukraine-population/  
+9. ECDB — Food eCommerce market in Ukraine: https://ecommercedb.com/markets/ua/food  
+10. Gluten Free Scanner official site: https://glutenfreescanner.app/  
+11. Gluten Free Scanner App Store page: https://apps.apple.com/us/app/gluten-free-scanner/id1642357030  
+12. Find Me Gluten Free Google Play: https://play.google.com/store/apps/details?id=com.fmgf.free  
+13. Find Me Gluten Free App Store ratings: https://apps.apple.com/us/app/find-me-gluten-free/id431006818  
+14. Find Me Gluten Free Premium: https://www.findmeglutenfree.com/premium  
+15. Sansglu official site: https://sansglu.com/  
+16. Open Food Facts API docs: https://openfoodfacts.github.io/documentation/docs/Product-Opener/api/  
+17. Google Cloud Vision pricing: https://cloud.google.com/vision/pricing  
+18. Apple App Review Guidelines: https://developer.apple.com/app-store/review/guidelines/  
+19. Держпродспоживслужба — маркування імпортних харчових продуктів: https://dpss.gov.ua/news/bezpechnist-kharchovykh-produktiv-markuvannia-importnykh-kharchovykh-produktiv-na-shcho-zvernuty-uvahu-spozhyvachu  
+20. Закон України, ст. 15 — інформація про алергени: https://zakon.rada.gov.ua/laws/show/2639-19/paran15  
+21. BetterMe App Store listing: https://apps.apple.com/ua/app/betterme-health-coaching/id1264546236  
+22. BetterMe subscription terms: https://betterme.world/ua/subscription-terms  
+23. YAZIO App Store listing: https://apps.apple.com/ua/app/yazio-calorie-counter-diet/id946099227  
+24. Silpo gluten-free category: https://silpo.ua/category/bezghliutenovi-produkty-4868  
+25. Українська спілка целіакії: https://celiac.org.ua/c/index.cfm?sid=50  
+26. Food Like Company: https://foodlike.com.ua/  
+27. Dobrodiya Foods / WOWOATS: https://dobrodiya.com.ua/  
 
 ### Методологія
 
 - Global market sizing взято з двох комерційних research providers, щоб не залежати від одного forecast.
 - Поширеність целіакії взято з systematic review/meta-analysis: 1.4% serology, 0.7% biopsy.
 - Український sizing подано сценарно через нестачу актуальної офіційної статистики по целіакії та демографічну невизначеність.
-- Первинний user insight базується на lived experience автора як людини з целіакією в Україні; це якісний сигнал проблеми, не статистичний доказ попиту.
-- TAM/SAM/SOM — гіпотези для тестування, не факт.
-- Financial projections — модель чутливості за MAU, paid conversion, ARPPU, OCR COGS, CAC/LTV та B2B add-on.
-- Traction конкурентів позначено як platform-verified для App Store / Google Play і як self-reported там, де джерелом є офіційний сайт компанії.
+- Primary insight — discovery hypothesis; потребує 30-50 інтервʼю + beta, не статистика попиту.
+- Digital base: 29.5M × 89.6%, не 35.3M DataReportal raw.
+- Reachable 60%/50% — e-commerce penetration та symptom filters (proxies).
+- FX: 40 грн/USD для OCR.
+- Traction: platform-verified + self-reported + Similarweb/SensorTower order-of-magnitude proxies.
+- Візуалізації: без fake % у donut; funnel — пропорційні бари; heatmap — ARPPU по сценаріях.
 
 ### Якість джерел
 

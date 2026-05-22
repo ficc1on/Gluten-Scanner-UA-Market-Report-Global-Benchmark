@@ -7,8 +7,55 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <script>
+      (function () {
+        const stored = localStorage.getItem("gluten-report-theme");
+        const theme = stored === "dark" || stored === "light" ? stored : "light";
+        document.documentElement.setAttribute("data-theme", theme);
+      })();
+    </script>
     <style>
       :root {
+        color-scheme: light;
+        --html-bg: #e8f0f7;
+        --bg: #ffffff;
+        --bg-2: #f4f8fc;
+        --card: #ffffff;
+        --card-2: #eef4fa;
+        --line: rgba(0, 51, 141, .1);
+        --line-strong: rgba(0, 51, 141, .18);
+        --text: #051c2c;
+        --muted: #4a5f7a;
+        --soft: #6b7f96;
+        --green: #00338d;
+        --green-2: #0077c8;
+        --orange: #b45309;
+        --red: #b91c1c;
+        --shadow: 0 14px 40px rgba(0, 51, 141, .08);
+        --nav-bg: rgba(255, 255, 255, .96);
+        --surface: rgba(0, 119, 200, .06);
+        --surface-2: rgba(0, 51, 141, .08);
+        --card-shine: linear-gradient(145deg, rgba(255,255,255,.95), rgba(232,240,247,.6));
+        --page-bg: linear-gradient(180deg, #e8f0f7 0%, #f8fbfd 42%, #eef4fa 100%);
+        --page-glow-a: radial-gradient(circle at 12% 4%, rgba(0,119,200,.08), transparent 32%);
+        --page-glow-b: radial-gradient(circle at 88% 18%, rgba(0,51,141,.05), transparent 28%);
+        --kicker-bg: rgba(0, 119, 200, .08);
+        --kicker-border: rgba(0, 51, 141, .2);
+        --callout-bg: rgba(0, 119, 200, .06);
+        --callout-border: rgba(0, 51, 141, .16);
+        --heatmap-muted: rgba(5, 28, 44, .55);
+        --heatmap-outline: #00338d;
+        --heatmap-accent: #0077c8;
+        --dot-inverse-text: #051c2c;
+        --cta-fg: #ffffff;
+        --matrix-grid: rgba(0, 51, 141, .1);
+        --source-note: #5a6d85;
+        --fx-banner: rgba(0, 51, 141, .04);
+      }
+
+      [data-theme="dark"] {
+        color-scheme: dark;
+        --html-bg: #05070d;
         --bg: #070910;
         --bg-2: #0b0e16;
         --card: rgba(13, 16, 25, 0.82);
@@ -23,12 +70,30 @@
         --orange: #f39a37;
         --red: #ce5a4a;
         --shadow: 0 28px 80px rgba(0,0,0,.38);
+        --nav-bg: rgba(8, 10, 17, .88);
+        --surface: rgba(255,255,255,.04);
+        --surface-2: rgba(255,255,255,.05);
+        --card-shine: linear-gradient(145deg, rgba(255,255,255,.04), rgba(255,255,255,.01));
+        --page-bg: linear-gradient(180deg, #05070d 0%, var(--bg) 38%, #05070d 100%);
+        --page-glow-a: radial-gradient(circle at 16% 6%, rgba(91,163,60,.12), transparent 28%);
+        --page-glow-b: radial-gradient(circle at 84% 22%, rgba(243,154,55,.08), transparent 24%);
+        --kicker-bg: rgba(91,163,60,.09);
+        --kicker-border: rgba(91,163,60,.34);
+        --callout-bg: rgba(91,163,60,.08);
+        --callout-border: rgba(91,163,60,.28);
+        --heatmap-muted: rgba(245,245,242,.64);
+        --heatmap-outline: rgba(245,245,242,.88);
+        --heatmap-accent: #5ba33c;
+        --dot-inverse-text: #05070d;
+        --cta-fg: #ffffff;
+        --matrix-grid: rgba(255,255,255,.025);
+        --source-note: rgba(245,245,242,.76);
       }
 
       * { box-sizing: border-box; }
 
       html {
-        background: #05070d;
+        background: var(--html-bg);
         scroll-behavior: auto;
       }
 
@@ -37,11 +102,9 @@
         min-height: 100vh;
         font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
         color: var(--text);
-        background:
-          radial-gradient(circle at 16% 6%, rgba(91,163,60,.12), transparent 28%),
-          radial-gradient(circle at 84% 22%, rgba(243,154,55,.08), transparent 24%),
-          linear-gradient(180deg, #05070d 0%, var(--bg) 38%, #05070d 100%);
+        background: var(--page-glow-a), var(--page-glow-b), var(--page-bg);
         letter-spacing: 0;
+        transition: background .25s ease, color .2s ease;
       }
 
       html::before {
@@ -49,10 +112,8 @@
         position: fixed;
         inset: 0;
         z-index: -1;
-        background:
-          radial-gradient(circle at 16% 6%, rgba(91,163,60,.12), transparent 28%),
-          radial-gradient(circle at 84% 22%, rgba(243,154,55,.08), transparent 24%),
-          linear-gradient(180deg, #05070d 0%, var(--bg) 38%, #05070d 100%);
+        background: var(--page-glow-a), var(--page-glow-b), var(--page-bg);
+        transition: background .25s ease;
       }
 
       a { color: inherit; text-decoration: none; }
@@ -61,9 +122,10 @@
         position: sticky;
         top: 22px;
         z-index: 20;
-        max-width: 1740px;
+        max-width: min(1740px, 100%);
         margin: 22px auto 0;
         padding: 0 22px;
+        box-sizing: border-box;
         transform: translateY(0);
         transition: transform .24s ease, opacity .24s ease;
         will-change: transform;
@@ -76,13 +138,15 @@
       }
 
       .nav-wrap {
-        min-height: 88px;
-        padding: 14px 34px;
+        min-height: 72px;
+        padding: 12px 20px;
         display: flex;
         align-items: center;
         justify-content: space-between;
-        gap: 26px;
-        background: rgba(8, 10, 17, .88);
+        gap: 16px;
+        flex-wrap: wrap;
+        max-width: 100%;
+        background: var(--nav-bg);
         border: 1px solid var(--line-strong);
         border-radius: 18px;
         box-shadow: var(--shadow);
@@ -137,10 +201,11 @@
 
       nav {
         display: flex;
-        gap: 30px;
+        gap: 20px;
         align-items: center;
+        flex-wrap: wrap;
         color: var(--muted);
-        font-size: 16px;
+        font-size: 15px;
         font-weight: 600;
       }
 
@@ -174,7 +239,55 @@
         transform: scaleX(1);
       }
 
-      .nav-actions { display: flex; align-items: center; gap: 16px; }
+      .nav-actions {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        flex-shrink: 0;
+        margin-left: auto;
+      }
+
+      .theme-toggle {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        min-height: 34px;
+        padding: 0 10px;
+        border: 1px solid var(--line);
+        border-radius: 6px;
+        background: transparent;
+        color: var(--muted);
+        font: inherit;
+        font-size: 12px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: border-color .2s ease, color .2s ease, background .2s ease;
+      }
+
+      .theme-toggle:hover {
+        color: var(--text);
+        border-color: var(--green-2);
+      }
+
+      .theme-toggle:focus-visible {
+        outline: 2px solid var(--green-2);
+        outline-offset: 2px;
+      }
+
+      .theme-toggle-icon {
+        display: inline-grid;
+        place-items: center;
+        width: 18px;
+        height: 18px;
+        font-size: 15px;
+        line-height: 1;
+      }
+
+      [data-theme="light"] .theme-icon-dark,
+      [data-theme="dark"] .theme-icon-light {
+        display: none;
+      }
 
       .portal {
         display: inline-flex;
@@ -192,14 +305,16 @@
       .cta {
         display: inline-flex;
         align-items: center;
-        min-height: 54px;
-        padding: 0 30px;
-        border-radius: 7px;
-        background: var(--green);
-        color: #fff;
-        font-weight: 900;
+        min-height: 34px;
+        padding: 0 14px;
+        border-radius: 6px;
+        background: var(--green-2);
+        color: var(--cta-fg);
+        font-size: 12px;
+        font-weight: 800;
         text-transform: uppercase;
-        letter-spacing: 1.2px;
+        letter-spacing: .6px;
+        white-space: nowrap;
       }
 
       main {
@@ -227,8 +342,8 @@
         align-items: center;
         gap: 10px;
         color: var(--green-2);
-        border: 1px solid rgba(91,163,60,.34);
-        background: rgba(91,163,60,.09);
+        border: 1px solid var(--kicker-border);
+        background: var(--kicker-bg);
         border-radius: 999px;
         padding: 9px 18px;
         font-size: 14px;
@@ -247,7 +362,7 @@
         letter-spacing: -2.5px;
       }
 
-      .accent { color: var(--green); }
+      .accent { color: var(--green-2); }
 
       .lead {
         max-width: 860px;
@@ -270,10 +385,13 @@
       section.data-section {
         border: 1px solid var(--line);
         border-radius: 44px;
-        background:
-          linear-gradient(145deg, rgba(255,255,255,.04), rgba(255,255,255,.01)),
-          var(--card);
+        background: var(--card-shine), var(--card);
         box-shadow: var(--shadow);
+        transition: background .25s ease, border-color .2s ease, box-shadow .25s ease;
+      }
+
+      .nav-wrap {
+        transition: background .25s ease, border-color .2s ease, box-shadow .25s ease;
       }
 
       .hero-card {
@@ -368,7 +486,7 @@
 
       .metric small,
       .case-label {
-        color: var(--green-2);
+        color: var(--green);
         font-size: 16px;
         font-weight: 800;
         letter-spacing: 2px;
@@ -449,11 +567,21 @@
         gap: 28px;
       }
 
-      .grid-35-65 {
+      .product-exhibits {
+        grid-template-columns: 1fr;
+      }
+
+      .grid-split-50 {
         display: grid;
-        grid-template-columns: 35fr 65fr;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
         gap: 28px;
-        align-items: stretch;
+        align-items: start;
+      }
+
+      @media (max-width: 960px) {
+        .grid-split-50 {
+          grid-template-columns: 1fr;
+        }
       }
 
       .panel {
@@ -483,6 +611,16 @@
         text-align: left;
         border-bottom: 1px solid var(--line);
         vertical-align: top;
+        word-break: normal;
+        overflow-wrap: break-word;
+        hyphens: none;
+      }
+
+      .table-scroll-wrap :is(th, td),
+      .segment-priority-table :is(th, td) {
+        word-break: normal;
+        overflow-wrap: break-word;
+        hyphens: none;
       }
 
       th {
@@ -492,15 +630,126 @@
         text-transform: uppercase;
       }
 
+      #audienceTable th:nth-child(2),
       #audienceTable td:nth-child(2),
+      #b2bTable th:nth-child(n+3),
       #b2bTable td:nth-child(n+3),
+      #monetizationTable th:nth-child(2),
       #monetizationTable td:nth-child(2),
+      #pnlTable th:nth-child(2),
       #pnlTable td:nth-child(2),
+      #unitEconomicsTable th:nth-child(2),
       #unitEconomicsTable td:nth-child(2) {
         text-align: right;
         font-variant-numeric: tabular-nums;
         color: var(--text);
         font-weight: 700;
+      }
+
+      #b2bTable th:nth-child(6),
+      #b2bTable td:nth-child(6) {
+        text-align: left;
+        font-weight: 400;
+        color: var(--muted);
+      }
+
+      .funnel-context {
+        margin: 0 0 20px;
+        padding: 14px 16px;
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        background: var(--fx-banner);
+        color: var(--muted);
+        font-size: 14px;
+        line-height: 1.45;
+      }
+
+      .heatmap-scroll {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+      }
+
+      .segment-priority-table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+
+      .segment-priority-table th,
+      .segment-priority-table td {
+        padding: 14px 12px;
+        border-bottom: 1px solid var(--line);
+        text-align: left;
+        vertical-align: top;
+        font-size: 15px;
+      }
+
+      /* .segment-priority-table th + th,
+      .segment-priority-table td + td {
+        border-left: 1px solid var(--line);
+      } */
+
+      .segment-priority-table td::before {
+        content: none;
+        display: none;
+      }
+
+      #competitorsTable th:nth-child(3),
+      #competitorsTable td:nth-child(3),
+      #competitorsTable th:nth-child(4),
+      #competitorsTable td:nth-child(4) {
+        color: var(--muted);
+        font-size: 14px;
+      }
+
+      .segment-priority-table th {
+        font-size: 12px;
+        text-transform: uppercase;
+        letter-spacing: .8px;
+        color: var(--muted);
+      }
+
+      .priority-pill {
+        display: inline-block;
+        justify-self: start;
+        padding: 4px 10px;
+        border-radius: 999px;
+        font-size: 12px;
+        font-weight: 800;
+        letter-spacing: .4px;
+        text-transform: uppercase;
+        white-space: nowrap;
+      }
+
+      .priority-high {
+        background: rgba(0, 51, 141, .12);
+        color: var(--green);
+      }
+
+      .priority-medium {
+        background: rgba(0, 119, 200, .12);
+        color: var(--green-2);
+      }
+
+      .priority-low {
+        background: var(--surface);
+        color: var(--muted);
+      }
+
+      .appendix-list {
+        margin: 0;
+        padding-left: 22px;
+        color: var(--muted);
+        font-size: 15px;
+        line-height: 1.5;
+      }
+
+      .fx-note {
+        margin-top: 12px;
+        padding: 12px 14px;
+        border-radius: 10px;
+        background: var(--fx-banner);
+        color: var(--muted);
+        font-size: 14px;
       }
 
       td:first-child { color: var(--text); font-weight: 700; }
@@ -531,7 +780,7 @@
         display: flex;
         align-items: flex-end;
         min-height: 210px;
-        background: rgba(255,255,255,.04);
+        background: var(--surface);
         border: 1px solid var(--line);
         border-radius: 18px;
         overflow: hidden;
@@ -563,7 +812,7 @@
       .funnel-track,
       .track {
         height: 18px;
-        background: rgba(255,255,255,.05);
+        background: var(--surface-2);
         border: 1px solid var(--line);
         border-radius: 999px;
         overflow: hidden;
@@ -572,7 +821,7 @@
       .funnel-track div,
       .track div {
         height: 100%;
-        background: var(--green);
+        background: linear-gradient(90deg, var(--green), var(--green-2));
         border-radius: 999px;
       }
 
@@ -595,6 +844,123 @@
       .segment-panel {
         display: flex;
         flex-direction: column;
+        min-width: 0;
+        overflow: visible;
+      }
+
+      .table-scroll-wrap {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        margin: 0 -4px;
+        padding: 2px 4px 8px;
+      }
+
+      .segment-table-wrap {
+        width: 100%;
+        overflow: visible;
+      }
+
+      @media (min-width: 681px) {
+        .segment-table-wrap {
+          overflow: visible;
+        }
+
+        .segment-priority-table {
+          width: 100%;
+          min-width: 0;
+          table-layout: auto;
+        }
+
+        .segment-priority-table .col-seg-name {
+          width: 28%;
+        }
+
+        .segment-priority-table .col-seg-need {
+          width: 88px;
+        }
+
+        .segment-priority-table .col-seg-mvp {
+          width: 100px;
+        }
+
+        .segment-priority-table th:nth-child(2),
+        .segment-priority-table th:nth-child(3),
+        .segment-priority-table td:nth-child(2),
+        .segment-priority-table td:nth-child(3) {
+          white-space: nowrap;
+          width: 1%;
+        }
+      }
+
+      .table-scroll-wrap--b2b {
+        margin: 0;
+        padding: 0;
+      }
+
+      .table-scroll-wrap td::before,
+      .table-scroll-wrap th::before {
+        content: none !important;
+        display: none !important;
+      }
+
+      .table-scroll-wrap tbody tr {
+        display: table-row;
+        padding: 0;
+        margin: 0;
+        border: 0;
+        border-radius: 0;
+        background: transparent;
+      }
+
+      .table-financial th,
+      .table-financial td {
+        padding: 14px 16px;
+        vertical-align: top;
+        border-bottom: 1px solid var(--line);
+      }
+
+      .table-financial th + th,
+      .table-financial td + td {
+        border-left: 1px solid var(--line);
+      }
+
+      .table-financial thead th {
+        vertical-align: bottom;
+        padding-bottom: 12px;
+      }
+
+      .table-scroll-wrap .table-financial {
+        min-width: 760px;
+      }
+
+      .table-scroll-wrap #competitorsTable {
+        width: 100%;
+        min-width: 1020px;
+        table-layout: fixed;
+      }
+
+      #pnlTable tbody tr:last-child td {
+        border-top: 2px solid var(--line-strong);
+        font-style: italic;
+      }
+
+      .table-scroll-wide th + th,
+      .table-scroll-wide td + td {
+        border-left: 1px solid var(--line);
+      }
+
+      .table-scroll-wrap .table-scroll-wide,
+      .table-scroll-wrap .table-financial,
+      .table-scroll-wrap .table-b2b {
+        width: max-content;
+        min-width: 100%;
+        table-layout: fixed;
+      }
+
+      .table-b2b {
+        width: max-content;
+        min-width: 100%;
+        table-layout: fixed;
       }
 
       .segment-panel .donut-wrap {
@@ -628,7 +994,7 @@
         inset: 47px;
         border-radius: 50%;
         background: var(--card-2);
-        box-shadow: inset 0 0 0 1px rgba(255,255,255,.04);
+        box-shadow: inset 0 0 0 1px var(--line);
       }
       .legend { list-style: none; padding: 0; margin: 0; display: grid; gap: 12px; }
       .legend li { display: grid; grid-template-columns: 14px 1fr 50px; gap: 10px; color: var(--muted); }
@@ -644,8 +1010,44 @@
         background:
           linear-gradient(90deg, transparent 49.7%, var(--line) 50%, transparent 50.3%),
           linear-gradient(0deg, transparent 49.7%, var(--line) 50%, transparent 50.3%),
-          rgba(255,255,255,.025);
+          var(--matrix-grid);
         overflow: hidden;
+      }
+
+      .dot.dot-label-light span,
+      .risk-dot.dot-label-light span {
+        color: #ffffff;
+      }
+
+      .dot.dot-label-dark span,
+      .risk-dot.dot-label-dark span {
+        color: #051c2c;
+      }
+
+      [data-theme="dark"] .dot.dot-label-dark span,
+      [data-theme="dark"] .risk-dot.dot-label-dark span {
+        color: #f5f5f2;
+      }
+
+      .dot[style*="#e8f0f7"],
+      .dot.dot-label-dark {
+        box-shadow: 0 0 0 1px var(--line-strong);
+      }
+
+      .dot.target-dot {
+        background: transparent;
+        border: 2px dashed var(--green-2);
+      }
+
+      .target-legend b {
+        background: transparent;
+        border: 2px dashed var(--green-2);
+      }
+
+      .target-legend span::before {
+        content: "To-Be · ";
+        color: var(--green-2);
+        font-weight: 800;
       }
 
       .risk-layout {
@@ -653,6 +1055,35 @@
         grid-template-columns: minmax(0, 1fr) 260px;
         gap: 24px;
         align-items: stretch;
+      }
+
+      .matrix-layout {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) minmax(260px, 34%);
+        gap: 24px;
+        align-items: stretch;
+      }
+
+      .matrix-layout .chart-legend {
+        margin-top: 0;
+        align-content: center;
+      }
+
+      .driver-layout {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) minmax(210px, 28%);
+        gap: 24px;
+        align-items: stretch;
+      }
+
+      .driver-layout .chart-legend {
+        margin-top: 0;
+        align-content: center;
+      }
+
+      .driver-legend li {
+        grid-template-columns: 24px 1fr;
+        align-items: center;
       }
 
       .axis,
@@ -689,7 +1120,6 @@
         left: 50%;
         top: 50%;
         transform: translate(-50%, -52%);
-        color: var(--text);
         font-size: 10px;
         line-height: 1;
         font-weight: 900;
@@ -721,15 +1151,20 @@
         height: 24px;
         border-radius: 999px;
         background: var(--dot-color, var(--green-2));
-        color: #fff;
         font-size: 11px;
+        font-weight: 900;
       }
 
-      .dot[style*="#ffffff"] span,
-      .chart-legend li[style*="#ffffff"] b,
-      .risk-dot[style*="#ffffff"] span,
-      .risk-legend li[style*="#ffffff"] b {
-        color: #05070d;
+      .chart-legend b.dot-label-light {
+        color: #ffffff;
+      }
+
+      .chart-legend b.dot-label-dark {
+        color: #051c2c;
+      }
+
+      [data-theme="dark"] .chart-legend b.dot-label-dark {
+        color: #f5f5f2;
       }
 
       .risk-legend {
@@ -783,14 +1218,20 @@
       .source-list a:hover { color: var(--green-2); }
 
       .source-note {
-        margin: 18px 0 0;
-        padding-top: 12px;
+        margin: 14px 0 0;
+        padding-top: 10px;
         border-top: 1px solid var(--line);
-        color: rgba(245,245,242,.62);
+        color: var(--source-note);
         font-size: 12px;
-        line-height: 1.35;
-        letter-spacing: .8px;
+        line-height: 1.4;
+        letter-spacing: .2px;
         text-transform: none;
+      }
+
+      .source-note::before {
+        content: "Source: ";
+        font-weight: 700;
+        color: var(--muted);
       }
 
       .source-note a {
@@ -822,20 +1263,26 @@
         letter-spacing: .8px;
       }
 
-      .heatmap span {
+      .heatmap span,
+      .heatmap-cell {
         color: var(--text);
         font-weight: 900;
       }
 
-      .heatmap span.base-cell {
-        outline: 2px solid rgba(245,245,242,.88);
+      .heatmap-cell {
+        background: color-mix(in srgb, var(--heatmap-accent) var(--heat, 40%), transparent);
+      }
+
+      .heatmap span.base-cell,
+      .heatmap-cell.base-cell {
+        outline: 2px solid var(--heatmap-outline);
         outline-offset: 2px;
       }
 
       .heatmap small {
         display: block;
         margin-top: 4px;
-        color: rgba(245,245,242,.64);
+        color: var(--heatmap-muted);
         font-size: 10px;
         text-transform: uppercase;
       }
@@ -882,7 +1329,7 @@
       .impact-track {
         position: relative;
         height: 16px;
-        background: rgba(255,255,255,.045);
+        background: var(--surface-2);
         border: 1px solid var(--line);
         border-radius: 999px;
         overflow: hidden;
@@ -902,7 +1349,7 @@
         top: 0;
         bottom: 0;
         border-radius: 999px;
-        background: var(--green);
+        background: var(--green-2);
       }
 
       .impact-row.negative .impact-track b {
@@ -920,9 +1367,9 @@
       .callout {
         margin-top: 24px;
         padding: 24px;
-        border: 1px solid rgba(91,163,60,.28);
+        border: 1px solid var(--callout-border);
         border-radius: 24px;
-        background: rgba(91,163,60,.08);
+        background: var(--callout-bg);
         color: var(--muted);
         font-size: 18px;
         line-height: 1.48;
@@ -950,20 +1397,19 @@
 
       .traction-list {
         display: grid;
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: 14px;
+        gap: 12px;
       }
 
       .traction-card {
         border: 1px solid var(--line);
-        border-radius: 20px;
-        padding: 18px;
-        background: rgba(255,255,255,.025);
+        border-radius: 16px;
+        padding: 16px 18px;
+        background: var(--surface);
       }
 
       .traction-card h4 {
-        margin: 0 0 14px;
-        font-size: 20px;
+        margin: 0 0 12px;
+        font-size: 18px;
         line-height: 1.2;
         font-weight: 700;
         color: var(--text);
@@ -972,36 +1418,92 @@
       .traction-card dl {
         margin: 0;
         display: grid;
-        gap: 10px;
+        gap: 8px;
       }
 
       .traction-card dl div {
         display: grid;
-        grid-template-columns: 120px 1fr;
-        gap: 14px;
-        padding-top: 10px;
+        grid-template-columns: 112px 1fr;
+        gap: 12px;
+        align-items: start;
+        padding-top: 8px;
         border-top: 1px solid var(--line);
       }
 
+      .traction-card dl div:first-child {
+        border-top: 0;
+        padding-top: 0;
+      }
+
       .traction-card dt {
-        color: var(--green-2);
-        font-size: 11px;
+        color: var(--green);
+        font-size: 10px;
         font-weight: 800;
-        letter-spacing: 1px;
+        letter-spacing: .8px;
         text-transform: uppercase;
       }
 
       .traction-card dd {
         margin: 0;
         color: var(--muted);
-        font-size: 15px;
-        line-height: 1.35;
+        font-size: 14px;
+        line-height: 1.4;
+      }
+
+      @media (min-width: 681px) {
+        .traction-list {
+          gap: 10px;
+        }
+
+        .traction-card {
+          display: grid;
+          grid-template-columns: minmax(150px, 22%) 1fr;
+          gap: 16px 20px;
+          align-items: start;
+          padding: 14px 18px;
+        }
+
+        .traction-card h4 {
+          margin: 0;
+          padding-top: 2px;
+          font-size: 17px;
+          line-height: 1.25;
+          grid-column: 1;
+          grid-row: 1;
+          align-self: start;
+        }
+
+        .traction-card dl {
+          grid-column: 2;
+          grid-row: 1;
+          gap: 6px;
+        }
+
+        .traction-card dl div {
+          grid-template-columns: 118px 1fr;
+          gap: 14px;
+          padding-top: 6px;
+        }
       }
 
       @media (max-width: 1180px) {
-        .nav-wrap { align-items: flex-start; flex-direction: column; }
-        nav { gap: 14px; justify-content: flex-start; flex-wrap: wrap; }
-        .hero, .section-head, .cards-3, .grid-2, .grid-35-65, .metrics { grid-template-columns: 1fr; }
+        .nav-wrap {
+          align-items: center;
+          flex-direction: row;
+          flex-wrap: wrap;
+        }
+        .brand { flex: 0 1 auto; }
+        nav {
+          order: 3;
+          flex: 1 1 100%;
+          gap: 12px 18px;
+          justify-content: flex-start;
+        }
+        .nav-actions {
+          order: 2;
+          margin-left: auto;
+        }
+        .hero, .section-head, .cards-3, .grid-2, .grid-split-50, .metrics, .matrix-layout, .driver-layout { grid-template-columns: 1fr; }
         .hero { min-height: auto; padding-top: 78px; }
         .case-card { min-height: 300px; }
         .case-card h3 { margin-top: 32px; }
@@ -1019,30 +1521,55 @@
           align-self: center;
         }
         .impact-track { grid-column: 1 / -1; }
-        #sensitivityHeatmap { overflow-x: auto; }
+        .heatmap-scroll { margin: 0 -8px; padding: 0 8px; }
         .heatmap { grid-template-columns: 110px repeat(3, minmax(130px, 1fr)); min-width: 560px; }
+        .table-scroll-wrap table { display: table; width: 100%; }
+        .table-scroll-wrap thead { display: table-header-group; }
+        .table-scroll-wrap tbody { display: table-row-group; }
+        .table-scroll-wrap tr { display: table-row; }
+        .table-scroll-wrap th,
+        .table-scroll-wrap td { display: table-cell; }
+        .table-scroll-wrap .table-b2b { min-width: 720px; }
+        .table-scroll-wrap #competitorsTable {
+          min-width: 920px;
+        }
       }
 
       @media (max-width: 680px) {
         .topbar { top: 10px; margin-top: 10px; padding: 0 10px; }
-        .nav-wrap { min-height: auto; padding: 14px; border-radius: 14px; gap: 14px; }
-        .brand { min-width: 0; gap: 12px; }
-        .wordmark { font-size: 26px; letter-spacing: -.6px; }
-        .brand span { font-size: 11px; }
-        nav { gap: 10px 16px; font-size: 14px; }
-        nav a { padding: 5px 0; }
-        .nav-actions {
-          width: 100%;
-          display: grid;
-          grid-template-columns: 1fr 1fr;
-          gap: 10px;
+        .nav-wrap {
+          min-height: auto;
+          padding: 10px 12px;
+          border-radius: 14px;
+          gap: 8px 10px;
         }
-        .portal, .cta {
-          min-height: 42px;
-          justify-content: center;
-          padding: 0 12px;
+        .brand { min-width: 0; gap: 10px; flex: 1 1 140px; }
+        .wordmark { font-size: 22px; letter-spacing: -.6px; }
+        .brand span { font-size: 10px; }
+        nav {
+          order: 3;
+          gap: 8px 12px;
           font-size: 13px;
-          letter-spacing: .5px;
+          width: 100%;
+        }
+        nav a { padding: 4px 0; }
+        .nav-actions {
+          order: 2;
+          width: auto;
+          margin-left: auto;
+          gap: 6px;
+        }
+        .theme-toggle {
+          min-height: 30px;
+          min-width: 30px;
+          padding: 0 8px;
+        }
+        .theme-toggle-label { display: none; }
+        .theme-toggle-icon { font-size: 14px; }
+        .cta {
+          min-height: 30px;
+          padding: 0 10px;
+          font-size: 11px;
         }
         main { padding: 0 14px 60px; }
         .section { padding-top: 78px; }
@@ -1054,6 +1581,7 @@
           min-height: 0;
           gap: 34px;
         }
+        .hero-card {min-height: 450px;}
         .case-card h3 {
           margin-top: 28px;
           font-size: 28px;
@@ -1068,7 +1596,7 @@
         th,
         td {
           display: block;
-          width: 100%;
+          /* width: 100%; */
         }
         table {
           font-size: 15px;
@@ -1076,35 +1604,148 @@
         thead {
           display: none;
         }
-        tr {
-          padding: 14px 0;
-          border-bottom: 1px solid var(--line);
+        table.table-mobile-stack tbody tr {
+          display: block;
+          padding: 12px;
+          margin-bottom: 10px;
+          border: 1px solid var(--line);
+          border-radius: 12px;
+          background: var(--card);
         }
-        tr:last-child {
-          border-bottom: 0;
+        table.table-mobile-stack tbody tr:last-child {
+          margin-bottom: 0;
         }
-        td {
+        table.table-mobile-stack td {
           display: grid;
-          grid-template-columns: minmax(112px, .42fr) 1fr;
-          gap: 14px;
-          padding: 8px 0;
-          border-bottom: 0;
+          grid-template-columns: 1fr;
+          gap: 6px;
+          padding: 10px 0;
+          border-bottom: 1px solid var(--line);
+          border-left: 0;
           text-align: left !important;
         }
-        td::before {
+        table.table-mobile-stack td:last-child {
+          border-bottom: 0;
+          padding-bottom: 0;
+        }
+        table.table-mobile-stack td:first-child {
+          padding-top: 0;
+        }
+        table.table-mobile-stack td::before {
           content: attr(data-label);
-          color: var(--green-2);
-          font-size: 11px;
+          display: block;
+          margin-bottom: 2px;
+          color: var(--green);
+          font-size: 10px;
           line-height: 1.25;
-          font-weight: 900;
-          letter-spacing: .8px;
+          font-weight: 800;
+          letter-spacing: .7px;
           text-transform: uppercase;
         }
-        #audienceTable td:nth-child(2),
-        #b2bTable td:nth-child(n+3),
-        #monetizationTable td:nth-child(2),
-        #pnlTable td:nth-child(2),
-        #unitEconomicsTable td:nth-child(2) {
+        .table-scroll-wrap table { display: table; width: 100%; }
+        .table-scroll-wrap thead { display: table-header-group; }
+        .table-scroll-wrap tbody { display: table-row-group; }
+        .table-scroll-wrap tr { display: table-row; }
+        .table-scroll-wrap th,
+        .table-scroll-wrap td {
+          display: table-cell;
+          padding: 12px 10px;
+          vertical-align: top;
+          border-bottom: 1px solid var(--line);
+        }
+        .table-scroll-wrap {
+          margin: 0 -4px;
+          padding: 0 4px 8px;
+        }
+
+        .table-scroll-wrap .table-scroll-wide,
+        .table-scroll-wrap .table-financial,
+        .table-scroll-wrap .table-b2b {
+          width: max-content;
+          min-width: 0;
+          table-layout: fixed;
+        }
+
+        .table-scroll-wrap #competitorsTable,
+        .table-scroll-wrap .table-financial,
+        .table-scroll-wrap .table-b2b {
+          min-width: 0;
+        }
+
+        .segment-table-wrap {
+          overflow: visible;
+          margin: 0;
+          padding: 0;
+        }
+
+        .segment-priority-table,
+        .segment-priority-table tbody,
+        .segment-priority-table tr,
+        .segment-priority-table td {
+          display: block;
+          width: 100%;
+        }
+
+        .segment-priority-table {
+          min-width: 0;
+          table-layout: auto;
+        }
+
+        .segment-priority-table thead,
+        .segment-priority-table colgroup {
+          display: none;
+        }
+
+        .segment-priority-table tr {
+          padding: 14px;
+          margin-bottom: 12px;
+          /* border: 1px solid var(--line); */
+          border-left: 0;
+          border-radius: 14px;
+          background: var(--card);
+        }
+
+        .segment-priority-table tr:last-child {
+          margin-bottom: 0;
+        }
+
+        .segment-priority-table td {
+          display: grid;
+          grid-template-columns: minmax(82px, .34fr) minmax(0, 1fr);
+          gap: 10px;
+          align-items: start;
+          padding: 8px 0;
+          border: 0;
+          border-bottom: 1px solid var(--line);
+          font-size: 14px;
+          overflow-wrap: break-word;
+        }
+
+        .segment-priority-table td:last-child {
+          border-bottom: 0;
+        }
+
+        .segment-priority-table td::before {
+          content: attr(data-label);
+          display: block;
+          color: var(--green);
+          font-size: 10px;
+          line-height: 1.25;
+          font-weight: 800;
+          letter-spacing: .7px;
+          text-transform: uppercase;
+        }
+
+        .segment-priority-table td:first-child {
+          grid-template-columns: 1fr;
+          color: var(--text);
+          font-size: 17px;
+        }
+
+        .segment-priority-table td:first-child::before {
+          display: none;
+        }
+        #monetizationTable td:nth-child(2) {
           text-align: left !important;
         }
         .impact-row,
@@ -1221,13 +1862,33 @@
           font-size: 13px;
           line-height: 1.35;
         }
-        .meta-grid { grid-template-columns: 1fr; }
+        .meta-grid {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+          gap: 10px;
+        }
+        .meta-grid div { padding: 12px; }
+        .meta-grid strong { font-size: 24px; }
+        .meta-grid span { font-size: 9px; letter-spacing: .9px; }
         .source-list { grid-template-columns: 1fr; }
         .matrix, .risk-grid { height: 430px; }
         .chart-legend li { grid-template-columns: 24px 1fr; }
         .chart-legend span { grid-column: 2; }
-        .traction-list { grid-template-columns: 1fr; }
-        .traction-card dl div { grid-template-columns: 1fr; gap: 4px; }
+        .traction-list { gap: 10px; }
+
+        .traction-card {
+          display: block;
+          padding: 14px;
+        }
+
+        .traction-card h4 {
+          margin: 0 0 10px;
+          font-size: 17px;
+        }
+
+        .traction-card dl div {
+          grid-template-columns: 1fr;
+          gap: 4px;
+        }
       }
     </style>
   </head>
@@ -1249,7 +1910,11 @@
           <a href="#sources">Джерела</a>
         </nav>
         <div class="nav-actions">
-          <a class="portal" href="./report.md">Markdown</a>
+          <button type="button" class="theme-toggle" id="themeToggle" aria-label="Перемкнути тему">
+            <span class="theme-toggle-icon theme-icon-light" aria-hidden="true">☀</span>
+            <span class="theme-toggle-icon theme-icon-dark" aria-hidden="true">☾</span>
+            <span class="theme-toggle-label" aria-hidden="true">Тема</span>
+          </button>
           <a class="cta" href="#finance">Фінмодель</a>
         </div>
       </div>
@@ -1259,11 +1924,10 @@
       <section id="summary" class="hero">
         <div>
           <span class="kicker">Ukraine · consulting case · 2026</span>
-          <h1>Глютеновий <span class="accent">сканер</span> має сенс лише як data-first продукт</h1>
+          <h1>MVP Go: 90 днів, щоб довести <span class="accent">repeat usage</span> і paid intent</h1>
           <p class="lead">Продукт перевіряє харчовий товар за штрихкодом, OCR складу або пошуком за 3-5 секунд. Не фізичний тест на глютен — цифрова оцінка ризику на основі бази SKU і rule engine. Точність прямо залежить від покриття локальних українських товарів і якості verified layer.</p>
           <div class="hero-actions">
             <a class="cta" href="#finance">Дивитись фінмодель</a>
-            <a class="portal" href="./report.md">Markdown</a>
           </div>
         </div>
         <aside class="hero-card">
@@ -1287,10 +1951,10 @@
             <span class="kicker">Executive summary</span>
             <h2>Ринок росте; українська можливість — у локальній базі й довірі</h2>
           </div>
-          <p>Продукт перевіряє товар за 3-5 секунд через штрихкод або OCR складу і повертає пояснюваний результат із рівнем довіри до джерела. Глобальний gluten-free ринок росте на ~9.6-10.1% CAGR, але для застосунку-сканера це tailwind попиту, не прямий TAM. Первинний user insight базується на lived experience автора як людини з целіакією в Україні: проблема перевірки складу в магазині є регулярною, але масштаб платної аудиторії треба довести MVP. Конкурентна перевага — не функції, а дані: глобальні застосунки слабо покривають українські SKU, кирилицю та імпорт із Польщі й Німеччини. MVP Go — не венчурна ставка, а 90-денний ринковий тест із чіткими stop criteria: repeat usage, SKU growth і paid intent.</p>
+          <p>Продукт перевіряє товар за 3-5 секунд через штрихкод або OCR складу і повертає пояснюваний результат із рівнем довіри до джерела. Ключова гіпотеза: читання етикеток у магазині — болісна точка з достатньо вузькою аудиторією для нішевого сервісу, але без proof of repeat usage і paid intent це не венчурна ставка. Перевага — локальні SKU, кирилиця та verified layer. <em>Estimated · scenario-based</em> для всіх UA-метрик.</p>
         </div>
           <div class="metrics" id="metricGrid"></div>
-          <p class="source-note">SOURCE: <a href="https://www.grandviewresearch.com/industry-analysis/gluten-free-products-market" target="_blank" rel="noreferrer">Grand View Research</a>; <a href="https://www.fortunebusinessinsights.com/industry-reports/gluten-free-food-market-100188" target="_blank" rel="noreferrer">Fortune Business Insights</a>; <a href="https://www.sciencedirect.com/science/article/pii/S1542356517307838" target="_blank" rel="noreferrer">Singh et al. systematic review</a>; Ukraine TAM is scenario-based.</p>
+          <p class="source-note">Grand View Research and Fortune BI are commercial estimates; Singh et al.; author's scenario model.</p>
       </section>
 
       <section class="section">
@@ -1299,11 +1963,12 @@
             <span class="kicker">Decision dashboard</span>
             <h2>Що вже доведено, а що має довести MVP</h2>
           </div>
-          <p>Що вже підтверджено даними, а що має довести MVP протягом 90 днів. Факти окремо — гіпотези окремо.</p>
+          <p>Dashboard не повторює market facts; він фіксує невідомі, які мають бути закриті до рішення Go / Pivot / Stop.</p>
         </div>
         <section class="data-section">
-          <table id="decisionTable"></table>
-          <p class="source-note">SOURCE: Analysis based on <a href="https://www.grandviewresearch.com/industry-analysis/gluten-free-products-market" target="_blank" rel="noreferrer">Grand View Research</a>, <a href="https://www.fortunebusinessinsights.com/industry-reports/gluten-free-food-market-100188" target="_blank" rel="noreferrer">Fortune Business Insights</a>, <a href="https://www.sciencedirect.com/science/article/pii/S1542356517307838" target="_blank" rel="noreferrer">Singh et al.</a>, <a href="https://datareportal.com/reports/digital-2026-ukraine" target="_blank" rel="noreferrer">DataReportal Ukraine 2026, Internet use section</a> (35.3M internet users; 89.6% penetration at end-2025), <a href="https://apps.apple.com/us/app/gluten-free-scanner/id1642357030" target="_blank" rel="noreferrer">App Store competitor listing</a>.</p>
+          <!-- Mobile only: редагуй data-mobile-col-widths. Desktop бере дефолти з TABLE_COL_WIDTHS в app.js. Числа = px; також працюють %, px, auto. -->
+          <table id="decisionTable" data-mobile-col-widths="76, 260, 90, 200"></table>
+          <p class="source-note">Author's analysis; DataReportal, App Store listings.</p>
         </section>
       </section>
 
@@ -1313,25 +1978,25 @@
             <span class="kicker">Market opportunity</span>
             <h2>Глобальний tailwind є, але revenue pool сканера треба рахувати знизу</h2>
           </div>
-          <p>Глобальний gluten-free food market — benchmark попиту, але не прямий TAM застосунку-сканера. Україну моделюємо сценарно: офіційної статистики по целіакії немає, демографія нестабільна через війну та міграцію.</p>
+          <p>Глобальний gluten-free food market — benchmark попиту, не TAM сканера. Україна: <strong>29.5 млн</strong> наявного населення (UN ~38 млн мінус окуповані території та міграція), <strong>~26.4 млн digital</strong> (×89.6% penetration). Курс моделі: <strong>40 грн/USD</strong> для OCR COGS. <em>Scenario-based · estimated.</em></p>
         </div>
         <section class="data-section">
           <div class="grid-2">
             <div class="panel">
               <h3>Exhibit 1 · Ріст глобального ринку, млрд USD</h3>
               <div class="bar-chart" id="marketChart"></div>
-              <p class="source-note">SOURCE: <a href="https://www.grandviewresearch.com/industry-analysis/gluten-free-products-market" target="_blank" rel="noreferrer">Grand View Research</a>; <a href="https://www.fortunebusinessinsights.com/industry-reports/gluten-free-food-market-100188" target="_blank" rel="noreferrer">Fortune Business Insights</a>; chart uses midpoint visualization between reported ranges.</p>
+              <p class="source-note">Grand View Research, Fortune BI; author's chart. 2028 і 2030 — linear interpolation between published endpoints.</p>
             </div>
             <div class="panel">
-              <h3>Exhibit 2 · TAM/SAM/SOM Україна, scenario model</h3>
+              <h3>Exhibit 2 · TAM/SAM/SOM Україна, base scenario</h3>
               <div id="funnelChart"></div>
-              <p class="source-note">SOURCE: <a href="https://datareportal.com/reports/digital-2026-ukraine" target="_blank" rel="noreferrer">DataReportal Ukraine 2026, Internet use section</a> reports 35.3M internet users and 89.6% penetration at end-2025; <a href="https://population.un.org/wpp/" target="_blank" rel="noreferrer">UN World Population Prospects</a>; <a href="https://www.worldometers.info/world-population/ukraine-population/" target="_blank" rel="noreferrer">Worldometer</a>; funnel uses conservative 29.5M available-population assumption and visualizes scenario logic, not official statistics.</p>
+              <p class="source-note">DataReportal, UN WPP, author's scenario model.</p>
             </div>
           </div>
           <div class="panel" style="margin-top:28px;">
             <h3>Сценарна оцінка аудиторії</h3>
-            <table id="audienceTable"></table>
-            <p class="source-note">SOURCE: Scenario model based on <a href="https://datareportal.com/reports/digital-2026-ukraine" target="_blank" rel="noreferrer">DataReportal Ukraine 2026, Internet use section</a> (35.3M internet users; 89.6% penetration at end-2025), <a href="https://population.un.org/wpp/" target="_blank" rel="noreferrer">UN World Population Prospects</a>, <a href="https://www.worldometers.info/world-population/ukraine-population/" target="_blank" rel="noreferrer">Worldometer</a> and <a href="https://www.sciencedirect.com/science/article/pii/S1542356517307838" target="_blank" rel="noreferrer">global celiac prevalence meta-analysis</a>; Reachable TAM low case: 295K × 60% reachable × 50% active need ≈ 90K; high case adds family/lifestyle adjacency; official Ukraine celiac statistics are not available/current.</p>
+            <table id="audienceTable" data-mobile-col-widths="130, 120, auto"></table>
+            <p class="source-note">DataReportal, UN WPP, Singh et al.; author's analysis.</p>
           </div>
         </section>
       </section>
@@ -1342,7 +2007,7 @@
             <span class="kicker">Customer problem</span>
             <h2>Користувач купує не скан, а зниження ризику помилки</h2>
           </div>
-          <p>Користувач перевіряє товар за 3-5 секунд — у магазині, онлайн або в подорожі. Продукт має показати не просто статус, а джерело й рівень довіри до нього.</p>
+          <p>Користувач перевіряє товар за 3-5 секунд — у магазині, онлайн або в подорожі. Наступні JTBD — discovery hypotheses: первинних інтервʼю з 30+ респондентами ще не проведено, тому MVP має валідувати масштаб болю.</p>
         </div>
         <div class="cards-3">
           <article class="case-card">
@@ -1380,16 +2045,16 @@
           </article>
         </div>
         <section class="data-section">
-          <div class="grid-35-65">
+          <div class="grid-split-50">
             <div class="panel segment-panel">
-              <h3>Exhibit 3 · Гіпотетичний user mix для MVP</h3>
+              <h3>Exhibit 3 · Пріоритет сегментів (qualitative)</h3>
               <div id="segmentChart"></div>
-              <p class="source-note">SOURCE: Segment proportions are analytical hypotheses, not measured market shares; inputs are <a href="https://www.sciencedirect.com/science/article/pii/S1542356517307838" target="_blank" rel="noreferrer">celiac prevalence literature</a>, <a href="https://celiac.org.ua/c/index.cfm?sid=50" target="_blank" rel="noreferrer">Українська спілка целіакії</a> and observed scanner use cases from <a href="https://glutenfreescanner.app/" target="_blank" rel="noreferrer">Gluten Free Scanner</a>; validate via interviews and beta cohort.</p>
+              <p class="source-note">Qualitative discovery; Singh et al., author's analysis. Без % часток ринку.</p>
             </div>
             <div class="panel">
               <h3>Гіпотези для перевірки</h3>
-              <table id="hypothesisTable"></table>
-              <p class="source-note">SOURCE: Test design based on MVP assumptions informed by <a href="https://glutenfreescanner.app/" target="_blank" rel="noreferrer">Gluten Free Scanner positioning</a>, <a href="https://openfoodfacts.github.io/documentation/docs/Product-Opener/api/" target="_blank" rel="noreferrer">Open Food Facts API feasibility</a> and <a href="https://datareportal.com/reports/digital-2026-ukraine" target="_blank" rel="noreferrer">Ukraine digital adoption</a>; success metrics are hypotheses.</p>
+              <table id="hypothesisTable" data-mobile-col-widths="170, 190, auto"></table>
+              <p class="source-note">Open Food Facts, author's MVP design.</p>
             </div>
           </div>
         </section>
@@ -1401,25 +2066,23 @@
             <span class="kicker">Competitive landscape</span>
             <h2>Глобальні apps мають traction; слабке місце — локальна релевантність</h2>
           </div>
-          <p>Глобальні застосунки мають traction, але будувались під англомовні ринки. Їхня слабкість — не відсутність функцій, а відсутність українських даних. Wedge: локальна SKU-база, кирилиця, verified layer і B2B API для ритейлерів — усе це вимагає операційної роботи, яку важко скопіювати швидко.</p>
+          <p>Глобальні застосунки мають traction, але будувались під англомовні ринки. Їхня слабкість — не відсутність функцій, а відсутність українських даних. Wedge: локальна SKU-база, кирилиця, verified layer і B2B API для ритейлерів. Indirect threat: BetterMe, YAZIO або general food scanners можуть зайти в gluten niche, якщо побачать repeat usage.</p>
         </div>
         <section class="data-section">
-          <div class="grid-35-65">
-            <div class="panel">
-              <h3>Exhibit 4 · Competitive matrix</h3>
-              <div id="competitorMatrix"></div>
-              <p class="source-note">SOURCE: <a href="https://apps.apple.com/us/app/gluten-free-scanner/id1642357030" target="_blank" rel="noreferrer">Gluten Free Scanner App Store</a>; <a href="https://play.google.com/store/apps/details?id=com.fmgf.free" target="_blank" rel="noreferrer">Find Me Gluten Free Google Play</a>; <a href="https://sansglu.com/" target="_blank" rel="noreferrer">Sansglu</a>; <a href="https://openfoodfacts.github.io/documentation/docs/Product-Opener/api/" target="_blank" rel="noreferrer">Open Food Facts API</a>; axis scores are directional author assessment; UA Gluten Scanner is hypothetical target positioning. Competitor traction figures: App Store / Google Play ratings are platform-verified; user counts from official sites are self-reported and not independently audited.</p>
-            </div>
-            <div class="panel">
-              <h3>Докази traction конкурентів</h3>
-              <div class="traction-list" id="competitorsCards"></div>
-              <p class="source-note">SOURCE: <a href="https://glutenfreescanner.app/" target="_blank" rel="noreferrer">Gluten Free Scanner website</a> and <a href="https://apps.apple.com/us/app/gluten-free-scanner/id1642357030" target="_blank" rel="noreferrer">App Store</a>; <a href="https://apps.apple.com/us/app/find-me-gluten-free/id431006818" target="_blank" rel="noreferrer">Find Me Gluten Free App Store</a> / <a href="https://play.google.com/store/apps/details?id=com.fmgf.free" target="_blank" rel="noreferrer">Google Play</a>; <a href="https://sansglu.com/" target="_blank" rel="noreferrer">Sansglu website</a>; <a href="https://openfoodfacts.github.io/documentation/docs/Product-Opener/api/" target="_blank" rel="noreferrer">Open Food Facts API docs</a>.</p>
-            </div>
+          <div class="panel wide-panel">
+            <h3>Exhibit 4 · Competitive matrix</h3>
+            <div id="competitorMatrix"></div>
+            <p class="source-note">App Store, Google Play, author's positioning matrix; axis scores are directional expert assessment, not independently validated.</p>
+          </div>
+          <div class="panel" style="margin-top:28px;">
+            <h3>Докази traction конкурентів</h3>
+            <table id="competitorsTable" data-mobile-col-widths="130, 110, 260, 280, 240"></table>
+            <p class="source-note">App stores, official sites, Similarweb/SensorTower proxies (estimated); self-reported metrics are marked in table.</p>
           </div>
           <div class="panel" style="margin-top:28px;">
             <h3>Gap analysis · Український user need vs global apps</h3>
-            <table id="gapAnalysisTable"></table>
-            <p class="source-note">SOURCE: Gap analysis is an analytical synthesis from competitor positioning, <a href="https://openfoodfacts.github.io/documentation/docs/Product-Opener/api/" target="_blank" rel="noreferrer">Open Food Facts API feasibility</a>, local SKU/OCR constraints and MVP discovery hypotheses.</p>
+            <table id="gapAnalysisTable" data-mobile-col-widths="84, 160, 190, 170"></table>
+            <p class="source-note">Author's gap analysis.</p>
           </div>
         </section>
       </section>
@@ -1456,16 +2119,16 @@
           </article>
         </div>
         <section class="data-section">
-          <div class="grid-2">
+          <div class="grid-2 product-exhibits">
             <div class="panel">
               <h3>Exhibit 5 · SKU ramp як головний execution gate</h3>
               <div id="skuRampChart"></div>
-              <p class="source-note">SOURCE: Operating plan uses <a href="https://openfoodfacts.github.io/documentation/docs/Product-Opener/api/" target="_blank" rel="noreferrer">Open Food Facts API</a> as baseline data source and <a href="https://datareportal.com/reports/digital-2026-ukraine" target="_blank" rel="noreferrer">DataReportal Ukraine digital adoption</a> as acquisition context; target gates and community contribution % are planning assumptions, not forecasts; validate via beta cohort behavior.</p>
+              <p class="source-note">Open Food Facts, author's operating plan.</p>
             </div>
             <div class="panel">
-              <h3>Exhibit 6 · Driver impact on product viability</h3>
+              <h3>Exhibit 6 · Impact vs. Feasibility</h3>
               <div id="driverImpactChart"></div>
-              <p class="source-note">SOURCE: Analysis based on <a href="https://apps.apple.com/us/app/gluten-free-scanner/id1642357030" target="_blank" rel="noreferrer">Gluten Free Scanner App Store</a>, <a href="https://play.google.com/store/apps/details?id=com.fmgf.free" target="_blank" rel="noreferrer">Find Me Gluten Free Google Play</a>, <a href="https://openfoodfacts.github.io/documentation/docs/Product-Opener/api/" target="_blank" rel="noreferrer">Open Food Facts data model</a>, <a href="https://www.fda.gov/consumers/consumer-updates/gluten-free-means-what-it-says" target="_blank" rel="noreferrer">FDA labeling constraints</a>; impact scores are directional expert assessment on a -5 to +5 scale; not independently validated.</p>
+              <p class="source-note">Author's expert matrix; directional, not validated.</p>
             </div>
           </div>
         </section>
@@ -1482,18 +2145,18 @@
         <section class="data-section">
           <div class="panel">
             <h3>90-денний план</h3>
-            <table id="gtmTable"></table>
-            <p class="source-note">SOURCE: MVP plan informed by <a href="https://openfoodfacts.github.io/documentation/docs/Product-Opener/api/" target="_blank" rel="noreferrer">Open Food Facts API feasibility</a>, <a href="https://datareportal.com/reports/digital-2026-ukraine" target="_blank" rel="noreferrer">DataReportal Ukraine 2026, Internet use section</a> (35.3M internet users; 89.6% penetration at end-2025) and competitor onboarding models from <a href="https://glutenfreescanner.app/" target="_blank" rel="noreferrer">Gluten Free Scanner</a>.</p>
+            <table id="gtmTable" data-mobile-col-widths="120, 270, 150, 150"></table>
+            <p class="source-note">Author's GTM plan.</p>
           </div>
           <div class="panel" style="margin-top:28px;">
             <h3>Пріоритет каналів запуску</h3>
-            <table id="channelsTable"></table>
-            <p class="source-note">SOURCE: Channel priority is an author GTM hypothesis. First 30 days prioritize community and professional trust channels before broad paid media because the core unknown is repeat usage in a narrow medical/lifestyle audience, not reach volume.</p>
+            <table id="channelsTable" data-mobile-col-widths="36, 160, 185, 140, 190"></table>
+            <p class="source-note">Author's channel hypothesis.</p>
           </div>
           <div class="panel" style="margin-top:28px;">
             <h3>Монетизація</h3>
-            <table id="monetizationTable"></table>
-            <p class="source-note">SOURCE: Pricing is a UA willingness-to-pay hypothesis, not a verified UA benchmark. Global gluten-app anchors are used only to set a category ceiling because they have limited Ukraine focus: <a href="https://www.findmeglutenfree.com/premium" target="_blank" rel="noreferrer">Find Me Gluten Free Premium</a> is $24.99/year individual and $39.99/year family; <a href="https://apps.apple.com/ua/app/gluten-free-scanner/id1642357030" target="_blank" rel="noreferrer">Gluten Free Scanner UA App Store</a> shows free download with paid IAP/subscription options that vary by region. Broader sanity check: <a href="https://nutrola.app/uk/blog/why-is-yazio-so-expensive-now" target="_blank" rel="noreferrer">Nutrola's 2026 YAZIO pricing review</a> cites YAZIO PRO at roughly €4-6/month and Nutrola Premium at €2.50/month. BetterMe is excluded as a clean UA paid benchmark because <a href="https://betterme.world/ua/subscription-terms" target="_blank" rel="noreferrer">BetterMe terms</a> indicate Ukrainian users may have free access.</p>
+            <table id="monetizationTable" data-mobile-col-widths="72, 110, 230, 160, 170"></table>
+            <p class="source-note">Find Me Gluten Free Premium, App Store UA; author's WTP hypothesis.</p>
           </div>
         </section>
       </section>
@@ -1504,41 +2167,48 @@
             <span class="kicker">Financial projections</span>
             <h2>Ukraine-only B2C — нішевий бізнес; upside у B2B і CEE expansion</h2>
           </div>
-          <p>Базова модель: MAU × paid conversion × ARPPU, але рішення залежить від unit economics: CAC ceiling, churn, LTV і OCR COGS. B2B додає upside в base і high сценаріях, але не закладається як умова виживання MVP.</p>
+          <p>Базова модель: MAU × paid conversion × ARPPU, але рішення залежить від unit economics: CAC ceiling, churn, LTV і OCR COGS. Усі фінансові проекції — sensitivity model на основі гіпотез retention і WTP, не financial forecast. B2B — pre-LOI upside, не умова виживання MVP.</p>
         </div>
         <section class="data-section">
           <div class="grid-2">
             <div class="panel">
               <h3>Exhibit 7 · B2C revenue projection</h3>
               <div id="revenueChart"></div>
-              <p class="source-note">SOURCE: Financial model using stated assumptions: MAU × paid conversion × ARPPU; paid conversion is now modeled at 2-6%, not 15%. Input ranges informed by <a href="https://datareportal.com/reports/digital-2026-ukraine" target="_blank" rel="noreferrer">DataReportal Ukraine 2026, Internet use section</a> (35.3M internet users; 89.6% penetration at end-2025), <a href="https://www.sciencedirect.com/science/article/pii/S1542356517307838" target="_blank" rel="noreferrer">celiac prevalence meta-analysis</a>, and competitor app monetization context from <a href="https://apps.apple.com/us/app/gluten-free-scanner/id1642357030" target="_blank" rel="noreferrer">App Store</a>.</p>
+              <p class="source-note">Author's financial model (scenario-based).</p>
             </div>
             <div class="panel">
               <h3>Exhibit 8 · MRR sensitivity heatmap</h3>
               <div id="sensitivityHeatmap"></div>
-              <p class="source-note">SOURCE: Sensitivity model uses the same 5K / 20K / 50K MAU range as revenue scenarios, with ARPPU fixed at 129 грн/month to isolate MAU and conversion effects; input ranges informed by <a href="https://datareportal.com/reports/digital-2026-ukraine" target="_blank" rel="noreferrer">DataReportal Ukraine 2026, Internet use section</a> (35.3M internet users; 89.6% penetration at end-2025) and <a href="https://www.sciencedirect.com/science/article/pii/S1542356517307838" target="_blank" rel="noreferrer">celiac prevalence literature</a>.</p>
+              <p class="source-note">Author's sensitivity; ARPPU 99 / 129 / 149 грн per column (Low/Base/High).</p>
             </div>
             <div class="panel wide-panel">
               <h3>Exhibit 9 · Unit economics gate</h3>
-              <table id="unitEconomicsTable"></table>
-              <p class="source-note">SOURCE: Unit economics are scenario assumptions. OCR COGS uses <a href="https://cloud.google.com/vision/pricing" target="_blank" rel="noreferrer">Google Cloud Vision pricing</a> as public proxy for text detection API cost; CAC/LTV/churn are MVP planning hypotheses to validate in paid acquisition and subscription cohorts.</p>
+              <div class="table-scroll-wrap">
+                <table id="unitEconomicsTable" data-mobile-col-widths="140, 160, 270"></table>
+              </div>
+              <p class="source-note">Google Cloud Vision, author's unit economics (40 грн/USD).</p>
             </div>
             <div class="panel wide-panel">
               <h3>Exhibit 10 · Base P&L bridge</h3>
-              <table id="pnlTable"></table>
-            <p class="source-note">SOURCE: P&L bridge is a base-scenario operating model. Platform fee uses a 15% blended App Store / Google Play assumption; OCR volume is 600 paid × 30 scans + 19,400 free × 10 scans = 212,000 scans/month; OCR variable cost uses <a href="https://cloud.google.com/vision/pricing" target="_blank" rel="noreferrer">Google Cloud Vision pricing</a>; tax line uses the common Ukraine FOP group 3 simplified-tax assumption of 5% of gross revenue; QA/moderation and hosting are lean MVP planning assumptions to validate during pilot.</p>
+              <div class="table-scroll-wrap">
+                <table id="pnlTable" data-mobile-col-widths="140, 100, 250"></table>
+              </div>
+              <p class="source-note">Author's base P&L bridge. ФОП 5% раховано від Gross MRR до platform fee як conservative MVP assumption.</p>
+            <p class="fx-note"><strong>FX:</strong> OCR COGS конвертується за курсом <strong>40 грн/USD</strong> (planning assumption, Appendix).</p>
             </div>
             <div class="panel wide-panel">
               <h3>Exhibit 11 · Risk matrix</h3>
               <div id="riskMatrix"></div>
-              <p class="source-note">SOURCE: Risk assessment based on <a href="https://www.fda.gov/consumers/consumer-updates/gluten-free-means-what-it-says" target="_blank" rel="noreferrer">FDA gluten-free labeling guidance</a>, <a href="https://www.aoecs.org/working-with-food/gluten-free-certification/" target="_blank" rel="noreferrer">AOECS threshold references</a>, <a href="https://developer.apple.com/app-store/review/guidelines/" target="_blank" rel="noreferrer">Apple App Review Guidelines 1.4.1 Health & Medical</a>, and <a href="https://openfoodfacts.github.io/documentation/docs/Product-Opener/api/" target="_blank" rel="noreferrer">Open Food Facts data constraints</a>. Color code reflects severity from matrix position: red = high likelihood/high impact, orange = elevated, yellow = medium, green = lower.</p>
+              <p class="source-note">FDA, AOECS, Apple Guidelines; author's risk matrix.</p>
             </div>
           </div>
           <div class="panel" style="margin-top:28px;">
-            <h3>B2B add-on сценарії</h3>
-            <table id="b2bTable"></table>
-            <p class="callout small-callout"><strong>Примітка:</strong> MRR/клієнт — гіпотеза без підтвердженого UA-прецеденту. Потребує валідації через LOI з ритейлерами або GF-брендами до включення в базовий сценарій.</p>
-            <p class="source-note">SOURCE: B2B scenario model informed by <a href="https://ecommercedb.com/markets/ua/food" target="_blank" rel="noreferrer">ECDB Ukraine food eCommerce market</a>, <a href="https://openfoodfacts.github.io/documentation/docs/Product-Opener/api/" target="_blank" rel="noreferrer">Open Food Facts API model</a> and retailer integration use case assumptions; ECDB covers total food eCommerce, not gluten-free segment; B2B pricing requires validation through retailer/brand LOIs.</p>
+            <h3>B2B upside сценарії · pre-LOI hypothesis</h3>
+            <div class="table-scroll-wrap table-scroll-wrap--b2b">
+              <table id="b2bTable" data-mobile-col-widths="56, 130, 80, 110, 110, 300"></table>
+            </div>
+            <p class="callout small-callout"><strong>B2B pricing proxy:</strong> 5-15K грн/міс орієнтовано на базові SaaS/API-тарифи для малого бізнесу та e-commerce plugin tier в UA (не LOI-confirmed).</p>
+            <p class="source-note">ECDB, author's B2B scenario (pre-LOI).</p>
           </div>
         </section>
       </section>
@@ -1552,8 +2222,8 @@
           <p>Два ризики з найвищою ймовірністю і найвищим впливом — помилкова рекомендація і недостатнє покриття SKU. Обидва вбивають продукт не через конкурентів, а через втрату довіри користувача після першої помилки.</p>
         </div>
         <section class="data-section">
-          <table id="riskTable"></table>
-          <p class="source-note">SOURCE: Risk assessment informed by <a href="https://www.fda.gov/consumers/consumer-updates/gluten-free-means-what-it-says" target="_blank" rel="noreferrer">FDA labeling guidance</a>, <a href="https://www.aoecs.org/working-with-food/gluten-free-certification/" target="_blank" rel="noreferrer">AOECS threshold references</a>, <a href="https://dpss.gov.ua/news/bezpechnist-kharchovykh-produktiv-markuvannia-importnykh-kharchovykh-produktiv-na-shcho-zvernuty-uvahu-spozhyvachu" target="_blank" rel="noreferrer">Держпродспоживслужба guidance on imported food labeling</a>, <a href="https://zakon.rada.gov.ua/laws/show/2639-19/paran15" target="_blank" rel="noreferrer">Law of Ukraine on food information, Article 15</a>, <a href="https://apps.fas.usda.gov/newgainapi/api/Report/DownloadReportByFileName?fileName=Ukraine+Adopts+New+Labeling+Requirements_Kyiv_Ukraine_01-28-2020" target="_blank" rel="noreferrer">USDA GAIN Ukraine labeling report</a> and scanner product limitations.</p>
+          <table id="riskTable" data-mobile-col-widths="128, 88, 88, 220"></table>
+          <p class="source-note">FDA, AOECS, Держпродспоживслужба, Закон України; author's analysis.</p>
           <p class="callout small-callout"><strong>UA compliance note:</strong> продукт не визначає лабораторний статус “без глютену”. Він читає маркування, OCR-дані та verified SKU, після чого показує оцінку ризику й джерело рішення. Перед публічним запуском потрібен legal review алергенного маркування, рекламних claims і privacy flow.</p>
           <div class="callout compact-callout">
             <strong>Stage-gate recommendation</strong>
@@ -1568,18 +2238,21 @@
             <span class="kicker">Appendix</span>
             <h2>Методологія й джерела</h2>
           </div>
-          <p>Факти підтверджені джерелами; TAM/SAM/SOM і фінансові проекції позначені як гіпотези та sensitivity model. Traction конкурентів взятий з публічних platform-verified даних App Store / Google Play і позначений як self-reported там, де джерелом є офіційний сайт компанії.</p>
+          <p>Факти — з посилань нижче; UA sizing і фінанси — <em>scenario-based · estimated</em>. Розгорнуті припущення — у Appendix notes.</p>
         </div>
         <section class="data-section">
           <div class="panel">
             <h3>Методологія</h3>
-            <table id="methodologyTable"></table>
-            <p class="source-note">SOURCE: Methodology uses public data from <a href="https://www.grandviewresearch.com/industry-analysis/gluten-free-products-market" target="_blank" rel="noreferrer">Grand View Research</a>, <a href="https://www.fortunebusinessinsights.com/industry-reports/gluten-free-food-market-100188" target="_blank" rel="noreferrer">Fortune Business Insights</a>, <a href="https://www.sciencedirect.com/science/article/pii/S1542356517307838" target="_blank" rel="noreferrer">Singh et al.</a>, <a href="https://datareportal.com/reports/digital-2026-ukraine" target="_blank" rel="noreferrer">DataReportal Ukraine 2026, Internet use section</a> (35.3M internet users; 89.6% penetration at end-2025), and competitor listings.</p>
+            <table id="methodologyTable" data-mobile-col-widths="88, 210, 220"></table>
+            <p class="source-note">Grand View, Fortune BI, DataReportal, Singh et al.</p>
+          </div>
+          <div class="panel" style="margin-top:28px;">
+            <h3>Appendix · припущення моделі</h3>
+            <ul class="appendix-list" id="appendixNotes"></ul>
           </div>
           <div class="panel" style="margin-top:28px;">
             <h3>Джерела</h3>
             <ol class="source-list" id="sourceList"></ol>
-            <p class="source-note">SOURCE: Linked public sources used for <a href="https://www.grandviewresearch.com/industry-analysis/gluten-free-products-market" target="_blank" rel="noreferrer">market sizing</a>, <a href="https://www.sciencedirect.com/science/article/pii/S1542356517307838" target="_blank" rel="noreferrer">prevalence</a>, <a href="https://datareportal.com/reports/digital-2026-ukraine" target="_blank" rel="noreferrer">digital adoption</a>, <a href="https://apps.apple.com/us/app/gluten-free-scanner/id1642357030" target="_blank" rel="noreferrer">competitors</a>, and <a href="https://openfoodfacts.github.io/documentation/docs/Product-Opener/api/" target="_blank" rel="noreferrer">API feasibility</a>.</p>
           </div>
         </section>
       </section>
@@ -1675,7 +2348,27 @@
       });
       updateActiveNav();
       updateHeaderVisibility();
+
+      const themeToggle = document.getElementById("themeToggle");
+      const themeLabel = themeToggle?.querySelector(".theme-toggle-label");
+
+      const applyTheme = (theme) => {
+        const next = theme === "dark" ? "dark" : "light";
+        document.documentElement.setAttribute("data-theme", next);
+        localStorage.setItem("gluten-report-theme", next);
+        if (themeLabel) {
+          themeLabel.textContent = next === "dark" ? "Світла" : "Темна";
+        }
+        themeToggle?.setAttribute("aria-pressed", next === "dark" ? "true" : "false");
+      };
+
+      themeToggle?.addEventListener("click", () => {
+        const current = document.documentElement.getAttribute("data-theme") || "light";
+        applyTheme(current === "dark" ? "light" : "dark");
+      });
+
+      applyTheme(document.documentElement.getAttribute("data-theme") || "light");
     </script>
-    <script src="./app.js?v=13"></script>
+    <script src="./app.js?v=23"></script>
   </body>
 </html>
