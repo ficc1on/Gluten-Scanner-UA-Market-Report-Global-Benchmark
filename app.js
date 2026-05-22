@@ -136,11 +136,11 @@ const data = {
   riskMatrix: [
     ["1", "Помилкова рекомендація", 86, 78, "#ce5a4a"],
     ["2", "Покриття SKU", 76, 86, "#ce5a4a"],
-    ["7", "App Store review", 66, 82, "#ce5a4a"],
-    ["6", "Медичні твердження", 54, 86, "#f39a37"],
-    ["3", "OCR-помилки", 58, 76, "#f39a37"],
-    ["4", "Готовність платити", 48, 48, "#f4c542"],
-    ["5", "Копіювання функцій", 40, 42, "#78c455"]
+    ["3", "App Store review", 66, 82, "#ce5a4a"],
+    ["4", "Медичні твердження", 54, 86, "#f39a37"],
+    ["5", "OCR-помилки", 58, 76, "#f39a37"],
+    ["6", "Готовність платити", 48, 48, "#f4c542"],
+    ["7", "Копіювання функцій", 40, 42, "#78c455"]
   ],
   audience: {
     headers: ["Рівень", "Оцінка", "Логіка"],
@@ -240,9 +240,10 @@ const data = {
 
 function renderTable(targetId, tableData) {
   const target = document.getElementById(targetId);
+  if (!target) return;
   const head = tableData.headers.map((header) => `<th>${header}</th>`).join("");
   const rows = tableData.rows
-    .map((row) => `<tr>${row.map((cell) => `<td>${cell}</td>`).join("")}</tr>`)
+    .map((row) => `<tr>${row.map((cell, index) => `<td data-label="${tableData.headers[index]}">${cell}</td>`).join("")}</tr>`)
     .join("");
   target.innerHTML = `<thead><tr>${head}</tr></thead><tbody>${rows}</tbody>`;
 }
@@ -426,7 +427,6 @@ function render() {
 
   renderTable("audienceTable", data.audience);
   renderTable("decisionTable", data.decision);
-  renderTable("competitorsTable", data.competitorsTable);
   renderCompetitorCards();
   renderTable("gapAnalysisTable", data.gapAnalysis);
   renderTable("gtmTable", data.gtm);

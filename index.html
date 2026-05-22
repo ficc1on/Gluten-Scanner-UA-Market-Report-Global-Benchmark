@@ -26,7 +26,11 @@
       }
 
       * { box-sizing: border-box; }
-      html { scroll-behavior: smooth; }
+
+      html {
+        background: #05070d;
+        scroll-behavior: auto;
+      }
 
       body {
         margin: 0;
@@ -40,6 +44,17 @@
         letter-spacing: 0;
       }
 
+      html::before {
+        content: "";
+        position: fixed;
+        inset: 0;
+        z-index: -1;
+        background:
+          radial-gradient(circle at 16% 6%, rgba(91,163,60,.12), transparent 28%),
+          radial-gradient(circle at 84% 22%, rgba(243,154,55,.08), transparent 24%),
+          linear-gradient(180deg, #05070d 0%, var(--bg) 38%, #05070d 100%);
+      }
+
       a { color: inherit; text-decoration: none; }
 
       .topbar {
@@ -49,6 +64,15 @@
         max-width: 1740px;
         margin: 22px auto 0;
         padding: 0 22px;
+        transform: translateY(0);
+        transition: transform .24s ease, opacity .24s ease;
+        will-change: transform;
+      }
+
+      .topbar.is-hidden {
+        transform: translateY(calc(-100% - 30px));
+        opacity: 0;
+        pointer-events: none;
       }
 
       .nav-wrap {
@@ -917,6 +941,13 @@
         font-size: 15px;
       }
 
+      .compact-callout {
+        margin-top: 16px;
+        padding: 16px 18px;
+        border-radius: 16px;
+        font-size: 15px;
+      }
+
       .traction-list {
         display: grid;
         grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -972,24 +1003,224 @@
         nav { gap: 14px; justify-content: flex-start; flex-wrap: wrap; }
         .hero, .section-head, .cards-3, .grid-2, .grid-35-65, .metrics { grid-template-columns: 1fr; }
         .hero { min-height: auto; padding-top: 78px; }
-        .case-card { min-height: 420px; }
-        .case-card h3 { margin-top: 60px; }
-        .revenue-row, .funnel-row, .donut-wrap, .sku-row, .impact-row, .risk-layout { grid-template-columns: 1fr; }
+        .case-card { min-height: 300px; }
+        .case-card h3 { margin-top: 32px; }
+        .revenue-row, .funnel-row, .donut-wrap, .sku-row, .risk-layout { grid-template-columns: 1fr; }
+        .impact-row,
+        .wide-panel .impact-row {
+          grid-template-columns: 1fr auto;
+          gap: 7px 12px;
+          margin: 10px 0;
+        }
+        .impact-row span { grid-column: 1; }
+        .impact-row strong {
+          grid-column: 2;
+          grid-row: 1;
+          align-self: center;
+        }
+        .impact-track { grid-column: 1 / -1; }
         #sensitivityHeatmap { overflow-x: auto; }
         .heatmap { grid-template-columns: 110px repeat(3, minmax(130px, 1fr)); min-width: 560px; }
       }
 
       @media (max-width: 680px) {
         .topbar { top: 10px; margin-top: 10px; padding: 0 10px; }
-        .nav-wrap { padding: 16px; border-radius: 14px; }
-        .nav-actions { width: 100%; flex-direction: column; align-items: stretch; }
-        .portal, .cta { justify-content: center; }
+        .nav-wrap { min-height: auto; padding: 14px; border-radius: 14px; gap: 14px; }
+        .brand { min-width: 0; gap: 12px; }
+        .wordmark { font-size: 26px; letter-spacing: -.6px; }
+        .brand span { font-size: 11px; }
+        nav { gap: 10px 16px; font-size: 14px; }
+        nav a { padding: 5px 0; }
+        .nav-actions {
+          width: 100%;
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 10px;
+        }
+        .portal, .cta {
+          min-height: 42px;
+          justify-content: center;
+          padding: 0 12px;
+          font-size: 13px;
+          letter-spacing: .5px;
+        }
         main { padding: 0 14px 60px; }
         .section { padding-top: 78px; }
         h1, .mega-title { font-size: 44px; letter-spacing: -1.4px; }
         h2 { font-size: 36px; letter-spacing: -1px; }
         .lead, .section-head p { font-size: 17px; }
         .hero-card, .case-card, section.data-section, .panel, .metric { border-radius: 24px; padding: 24px; }
+        .case-card {
+          min-height: 0;
+          gap: 34px;
+        }
+        .case-card h3 {
+          margin-top: 28px;
+          font-size: 28px;
+        }
+        .case-card p {
+          font-size: 16px;
+        }
+        table,
+        thead,
+        tbody,
+        tr,
+        th,
+        td {
+          display: block;
+          width: 100%;
+        }
+        table {
+          font-size: 15px;
+        }
+        thead {
+          display: none;
+        }
+        tr {
+          padding: 14px 0;
+          border-bottom: 1px solid var(--line);
+        }
+        tr:last-child {
+          border-bottom: 0;
+        }
+        td {
+          display: grid;
+          grid-template-columns: minmax(112px, .42fr) 1fr;
+          gap: 14px;
+          padding: 8px 0;
+          border-bottom: 0;
+          text-align: left !important;
+        }
+        td::before {
+          content: attr(data-label);
+          color: var(--green-2);
+          font-size: 11px;
+          line-height: 1.25;
+          font-weight: 900;
+          letter-spacing: .8px;
+          text-transform: uppercase;
+        }
+        #audienceTable td:nth-child(2),
+        #b2bTable td:nth-child(n+3),
+        #monetizationTable td:nth-child(2),
+        #pnlTable td:nth-child(2),
+        #unitEconomicsTable td:nth-child(2) {
+          text-align: left !important;
+        }
+        .impact-row,
+        .wide-panel .impact-row {
+          grid-template-columns: minmax(0, 1fr) auto;
+          margin: 12px 0 18px;
+        }
+        .impact-row span {
+          font-size: 15px;
+          font-weight: 700;
+          color: var(--muted);
+        }
+        .impact-row strong {
+          font-size: 17px;
+        }
+        .impact-track {
+          height: 14px;
+        }
+        .revenue-row {
+          grid-template-columns: minmax(0, 1fr) auto;
+          gap: 6px 12px;
+          margin: 18px 0;
+        }
+        .revenue-row strong {
+          grid-column: 1;
+          grid-row: 1;
+        }
+        .revenue-row span {
+          grid-column: 2;
+          grid-row: 1;
+          text-align: right;
+          font-size: 17px;
+        }
+        .revenue-row .track {
+          grid-column: 1 / -1;
+          grid-row: 2;
+          height: 12px;
+        }
+        .revenue-row small {
+          grid-column: 1 / -1;
+          grid-row: 3;
+          margin-top: 0;
+          font-size: 13px;
+        }
+        .funnel-row {
+          grid-template-columns: minmax(0, 1fr) auto;
+          gap: 6px 12px;
+          margin: 22px 0;
+        }
+        .funnel-row > div:first-child {
+          display: contents;
+          min-width: 0;
+        }
+        .funnel-row > div:first-child strong {
+          display: block;
+          grid-column: 1;
+          grid-row: 1;
+          font-size: 18px;
+          line-height: 1.18;
+        }
+        .funnel-row > div:first-child span {
+          grid-column: 1 / -1;
+          grid-row: 3;
+          margin-top: 0;
+          font-size: 13px;
+          line-height: 1.35;
+        }
+        .funnel-row > b {
+          grid-column: 2;
+          grid-row: 1;
+          align-self: start;
+          color: var(--green-2);
+          font-size: 18px;
+          font-weight: 900;
+          line-height: 1.18;
+          white-space: nowrap;
+          text-align: right;
+        }
+        .funnel-row .funnel-track {
+          grid-column: 1 / -1;
+          grid-row: 2;
+          height: 12px;
+          margin-top: 4px;
+        }
+        .sku-row {
+          grid-template-columns: minmax(0, 1fr) auto;
+          gap: 6px 12px;
+          margin: 22px 0;
+        }
+        .sku-row > strong {
+          grid-column: 1;
+          grid-row: 1;
+          font-size: 18px;
+          line-height: 1.18;
+        }
+        .sku-row > span {
+          grid-column: 2;
+          grid-row: 1;
+          align-self: start;
+          font-size: 18px;
+          line-height: 1.18;
+          white-space: nowrap;
+          text-align: right;
+        }
+        .sku-row > .track {
+          grid-column: 1 / -1;
+          grid-row: 2;
+          height: 12px;
+          margin-top: 4px;
+        }
+        .sku-row > small {
+          grid-column: 1 / -1;
+          grid-row: 3;
+          font-size: 13px;
+          line-height: 1.35;
+        }
         .meta-grid { grid-template-columns: 1fr; }
         .source-list { grid-template-columns: 1fr; }
         .matrix, .risk-grid { height: 430px; }
@@ -1182,7 +1413,6 @@
             <div class="panel">
               <h3>Докази traction конкурентів</h3>
               <div class="traction-list" id="competitorsCards"></div>
-              <table id="competitorsTable" hidden></table>
               <p class="source-note">SOURCE: <a href="https://glutenfreescanner.app/" target="_blank" rel="noreferrer">Gluten Free Scanner website</a> and <a href="https://apps.apple.com/us/app/gluten-free-scanner/id1642357030" target="_blank" rel="noreferrer">App Store</a>; <a href="https://apps.apple.com/us/app/find-me-gluten-free/id431006818" target="_blank" rel="noreferrer">Find Me Gluten Free App Store</a> / <a href="https://play.google.com/store/apps/details?id=com.fmgf.free" target="_blank" rel="noreferrer">Google Play</a>; <a href="https://sansglu.com/" target="_blank" rel="noreferrer">Sansglu website</a>; <a href="https://openfoodfacts.github.io/documentation/docs/Product-Opener/api/" target="_blank" rel="noreferrer">Open Food Facts API docs</a>.</p>
             </div>
           </div>
@@ -1325,7 +1555,7 @@
           <table id="riskTable"></table>
           <p class="source-note">SOURCE: Risk assessment informed by <a href="https://www.fda.gov/consumers/consumer-updates/gluten-free-means-what-it-says" target="_blank" rel="noreferrer">FDA labeling guidance</a>, <a href="https://www.aoecs.org/working-with-food/gluten-free-certification/" target="_blank" rel="noreferrer">AOECS threshold references</a>, <a href="https://dpss.gov.ua/news/bezpechnist-kharchovykh-produktiv-markuvannia-importnykh-kharchovykh-produktiv-na-shcho-zvernuty-uvahu-spozhyvachu" target="_blank" rel="noreferrer">Держпродспоживслужба guidance on imported food labeling</a>, <a href="https://zakon.rada.gov.ua/laws/show/2639-19/paran15" target="_blank" rel="noreferrer">Law of Ukraine on food information, Article 15</a>, <a href="https://apps.fas.usda.gov/newgainapi/api/Report/DownloadReportByFileName?fileName=Ukraine+Adopts+New+Labeling+Requirements_Kyiv_Ukraine_01-28-2020" target="_blank" rel="noreferrer">USDA GAIN Ukraine labeling report</a> and scanner product limitations.</p>
           <p class="callout small-callout"><strong>UA compliance note:</strong> продукт не визначає лабораторний статус “без глютену”. Він читає маркування, OCR-дані та verified SKU, після чого показує оцінку ризику й джерело рішення. Перед публічним запуском потрібен legal review алергенного маркування, рекламних claims і privacy flow.</p>
-          <div class="callout">
+          <div class="callout compact-callout">
             <strong>Stage-gate recommendation</strong>
             Три умови масштабування: 5,000+ верифікованих SKU, >50% повторних beta users, >3% trial-to-paid. Усі три одночасно — не вибірково. Якщо є engagement без paid intent — pivot у B2B2C через дієтологів і клініки замість прямого масштабування.
           </div>
@@ -1357,6 +1587,9 @@
 
     <script>
       const navLinks = [...document.querySelectorAll("nav a[href^='#']")];
+      const topbar = document.querySelector(".topbar");
+      let lastScrollY = window.scrollY;
+      let ticking = false;
       const observedSections = navLinks
         .map((link) => ({
           link,
@@ -1370,12 +1603,19 @@
         });
       };
 
+      const headerOffset = () => {
+        const topbar = document.querySelector(".topbar");
+        return (topbar?.getBoundingClientRect().height || 0) + 42;
+      };
+
+      const getSectionTarget = (section) => section.querySelector(".section-head") || section;
+
       const updateActiveNav = () => {
         const offset = window.innerHeight * 0.28;
         const current = observedSections
           .map(({ section }) => ({
             id: section.id,
-            top: section.getBoundingClientRect().top - offset
+            top: getSectionTarget(section).getBoundingClientRect().top - offset
           }))
           .filter(({ top }) => top <= 0)
           .sort((a, b) => b.top - a.top)[0] || observedSections[0]?.section;
@@ -1383,11 +1623,59 @@
         if (current?.id) setActiveNav(current.id);
       };
 
-      window.addEventListener("scroll", updateActiveNav, { passive: true });
-      window.addEventListener("hashchange", updateActiveNav);
-      window.addEventListener("load", updateActiveNav);
+      const updateHeaderVisibility = () => {
+        const currentY = window.scrollY;
+        const canAutoHide = window.matchMedia("(max-width: 1180px)").matches;
+
+        if (!canAutoHide) {
+          topbar?.classList.remove("is-hidden");
+          lastScrollY = Math.max(currentY, 0);
+          return;
+        }
+
+        const scrollingDown = currentY > lastScrollY;
+        const pastHero = currentY > 180;
+
+        topbar?.classList.toggle("is-hidden", scrollingDown && pastHero);
+        lastScrollY = Math.max(currentY, 0);
+      };
+
+      const onScroll = () => {
+        if (ticking) return;
+        ticking = true;
+        window.requestAnimationFrame(() => {
+          updateActiveNav();
+          updateHeaderVisibility();
+          ticking = false;
+        });
+      };
+
+      document.querySelectorAll("a[href^='#']").forEach((link) => {
+        link.addEventListener("click", (event) => {
+          const id = link.getAttribute("href").slice(1);
+          const section = document.getElementById(id);
+          if (!section) return;
+
+          event.preventDefault();
+          const target = getSectionTarget(section);
+          const top = Math.max(0, target.getBoundingClientRect().top + window.scrollY - headerOffset());
+
+          window.scrollTo({ top, behavior: "auto" });
+          history.pushState(null, "", `#${id}`);
+          window.requestAnimationFrame(() => setActiveNav(id));
+        });
+      });
+
+      window.addEventListener("scroll", onScroll, { passive: true });
+      window.addEventListener("resize", updateHeaderVisibility);
+      window.addEventListener("hashchange", () => window.requestAnimationFrame(updateActiveNav));
+      window.addEventListener("load", () => {
+        updateActiveNav();
+        updateHeaderVisibility();
+      });
       updateActiveNav();
+      updateHeaderVisibility();
     </script>
-    <script src="./app.js?v=11"></script>
+    <script src="./app.js?v=13"></script>
   </body>
 </html>
